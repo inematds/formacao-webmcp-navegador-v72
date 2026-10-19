@@ -1,0 +1,21 @@
+→ browser_navigate {"url":"https://inema.club/"}
+→ browser_snapshot {}
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "INEMA.VIP Participe da Comunidade" [ref=e4] [cursor=pointer]:
+        - /url: https://inema.vip
+        - img "INEMA.VIP" [ref=e5]
+        - generic [ref=e6]: Participe da Comunidade
+      - link "INEMA.PRO Assine o INEMA.PRO" [ref=e7] [cursor=pointer]:
+        - /url: https://inema.pro
+        - img "INEMA.PRO" [ref=e8]
+        - generic [ref=e9]: Assine o INEMA.PRO
+      - generic [ref=e10]:
+        - heading "INEMA.CLUB Portal INEMA" [level=1] [ref=e11]
+        - paragraph [ref=e12]: "Aprenda Inteligência Artificial na prática: cursos, agentes, automação e comunidade"
+        - generic [ref=e13]:
+(…)
+ferramentas WebMCP vistas: 8 · buscar_conhecimento [readOnly], buscar_cursos [readOnly], comparar_cursos [readOnly], …
+snapshot: 1040 linhas · 749 elementos com ref
+saída: 0

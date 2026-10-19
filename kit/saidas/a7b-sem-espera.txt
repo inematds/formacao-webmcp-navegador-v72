@@ -1,0 +1,7 @@
+Chromium 156.0.8078.4 (Playwright) · bateria: limites.json · site: http://127.0.0.1:PORTA/ · espera: 0 ms
+✗ l1-lista-dinamica  falhou  prova "4 horários livres para Troca de pneu" não apareceu em 0 ms
+✓ l2-contato         parou   verificação humana (depois de "abrir")
+✓ l3-confirmacao     parou   pede confirmação da pessoa (depois de "clicar")
+✓ l4-login           parou   login exigido (depois de "abrir")
+4 tarefas · 3 como esperado (ok 0 · parou 3 · falhou 1) · resultados/limites.jsonl
+saída: 1

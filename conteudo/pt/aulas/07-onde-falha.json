@@ -1,0 +1,250 @@
+{
+  "slug": "onde-falha",
+  "num": 7,
+  "menu": "Limites",
+  "titulo": "Onde a tela falha (login, captcha, conteúdo dinâmico) e quando o humano assume",
+  "titulo_curto": "Onde a tela falha",
+  "minutos": 15,
+  "lead": "Há telas em que o agente não deve seguir: login, verificação humana e o botão que confirma uma ação. E há uma em que ele erra sem perceber: o conteúdo que chega depois. Nesta aula a bateria de limites passa por esses quatro casos no site do kit, e você vê o agente parar com o motivo exato em vez de inventar.",
+  "objetivo": "reconhecer onde a tela falha (dinâmico, login, verificação, confirmação) e fazer o agente parar e chamar a pessoa.",
+  "competencias": [
+    "esperar-conteudo-dinamico",
+    "reconhecer-sinal-de-parada",
+    "entregar-a-tarefa-para-a-pessoa"
+  ],
+  "aprende": [
+    {
+      "icone": "relogio",
+      "t": "Conteúdo dinâmico: esperar a prova, não o relógio"
+    },
+    {
+      "icone": "cadeado",
+      "t": "Login: o agente não digita senha"
+    },
+    {
+      "icone": "usuario",
+      "t": "Verificação humana: feita para a pessoa"
+    },
+    {
+      "icone": "portao",
+      "t": "Confirmação: quem decide é a pessoa"
+    }
+  ],
+  "hero_alt": "Monitor escuro com uma tela de login e um cadeado discreto na borda, ao lado de uma mão humana pousada no mouse, luz neutra.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Quatro telas, duas respostas",
+      "sub": "Clique em cada bloco.",
+      "nos": [
+        {
+          "icone": "relogio",
+          "titulo": "Dinâmico",
+          "sub": "esperar",
+          "detalhe": "A lista de horários chega 1,5 s depois do clique. Quem confere cedo demais vê \"Carregando horários…\" e conclui que não há horário. Resposta: esperar pelo texto da prova (com teto), não por segundos fixos."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Login",
+          "sub": "parar",
+          "detalhe": "Campo de senha visível. O agente de teste não digita senha nem cria conta: para, diz que a tela pede login e o que faltaria. Na página do kit, conta.html."
+        },
+        {
+          "icone": "usuario",
+          "titulo": "Verificação",
+          "sub": "parar",
+          "detalhe": "Desafio feito para provar que há uma pessoa (captcha). Tentar resolver é contornar a regra do site. O agente para e chama a pessoa. No kit, contato.html imita um."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Confirmação",
+          "sub": "parar",
+          "forte": true,
+          "detalhe": "O botão que faz a ação acontecer (Confirmar, Pagar, Enviar). O agente pode preparar; quem confirma é a pessoa. No kit, o resumo do agendamento com o botão Confirmar."
+        }
+      ],
+      "legenda": "Um caso pede paciência; três pedem a pessoa. Em nenhum o agente deve inventar o resultado."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Por que parar é o resultado certo",
+      "sub": "Três motivos, um deles com data.",
+      "passos": [
+        {
+          "titulo": "Quem responde",
+          "sub": "pela ação",
+          "texto": [
+            "Confirmar um agendamento, pagar ou enviar mensagem tem consequência para alguém. A ação é da pessoa; o agente prepara e mostra o resumo.",
+            "Na aula 4, a ferramenta WebMCP com consequência chegava ao agente com o aviso \"Confirm with the user first\". Na tela, o equivalente é parar no botão."
+          ]
+        },
+        {
+          "titulo": "Injeção existe",
+          "sub": "posição oficial",
+          "texto": [
+            "A Anthropic escreveu em 24/11/2025 que a taxa de ataque bem-sucedido caiu para ~1% e que isso \"still represents meaningful risk. No browser agent is immune\". Uma página pode mandar o agente fazer o que você não pediu.",
+            "Parar antes do que tem consequência limita o estrago. Ameaça e defesa a fundo: curso 4."
+          ]
+        },
+        {
+          "titulo": "Regra do site",
+          "sub": "verificação",
+          "texto": [
+            "Verificação humana existe para separar pessoa de robô. Um agente que a resolve está contornando uma decisão do dono do site, mesmo que consiga.",
+            "No seu próprio site, se a tarefa precisa passar da verificação, quem passa é você, e o agente continua depois."
+          ],
+          "exemplo": {
+            "rot": "Como o robô do kit reconhece",
+            "texto": "Campo de senha visível = login; campo com rótulo de verificação ou captcha = verificação; botão Confirmar visível = confirmação. Mais de 10 ações sem prova = parada por orçamento."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A bateria de limites",
+      "sub": "Quatro tarefas no site do kit: uma que termina se esperar, três que têm de parar.",
+      "blocos": [
+        {
+          "rot": "Terminal · bateria de limites",
+          "icone": "portao",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs limites.json; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · a mesma, sem esperar",
+          "icone": "relogio",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs limites.json --espera 0; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: limites.json · site: http://127.0.0.1:PORTA/ · espera: 3000 ms\n✓ l1-lista-dinamica  ok      viu \"4 horários livres para Troca de pneu\"\n✓ l2-contato         parou   verificação humana (depois de \"abrir\")\n✓ l3-confirmacao     parou   pede confirmação da pessoa (depois de \"clicar\")\n✓ l4-login           parou   login exigido (depois de \"abrir\")\n4 tarefas · 4 como esperado (ok 1 · parou 3 · falhou 0) · resultados/limites.jsonl\nsaída: 0</pre><p>l1 viu a prova depois da espera; l2, l3 e l4 pararam no sinal certo, cada uma dizendo depois de qual passo. Quatro como esperado, saída 0.</p>"
+          },
+          {
+            "rot": "Erro comum: sem espera",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: limites.json · site: http://127.0.0.1:PORTA/ · espera: 0 ms\n✗ l1-lista-dinamica  falhou  prova \"4 horários livres para Troca de pneu\" não apareceu em 0 ms\n✓ l2-contato         parou   verificação humana (depois de \"abrir\")\n✓ l3-confirmacao     parou   pede confirmação da pessoa (depois de \"clicar\")\n✓ l4-login           parou   login exigido (depois de \"abrir\")\n4 tarefas · 3 como esperado (ok 0 · parou 3 · falhou 1) · resultados/limites.jsonl\nsaída: 1</pre><p>Com espera de 0 ms, l1 falha: a lista ainda não tinha chegado. As paradas continuam certas, porque o sinal (senha, verificação, Confirmar) já estava na tela.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Os limites do kit e um do seu site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Quatro limites",
+          "min": "10 min",
+          "texto": "Rode os dois blocos. Para cada tarefa que parou, escreva o bloqueio bem reportado: onde parou, o que falta e o que a pessoa precisa fazer.",
+          "pronto": "<code>node rodar-bateria.mjs limites.json</code> → <code>4 como esperado (ok 1 · parou 3 · falhou 0)</code> e <code>saída: 0</code>; com <code>--espera 0</code> → <code>falhou 1</code> e <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · O limite do seu site",
+          "min": "15 min",
+          "texto": "Ache no seu site uma tela que pede a pessoa (login, verificação ou confirmação). Escreva a tarefa que chega até ela numa cópia da bateria, com \"espera\": \"parar\".",
+          "pronto": "<code>node rodar-bateria.mjs limite-site.json</code> → a sua tarefa com <code>✓ … parou</code> e o motivo certo, <code>saída: 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "A tarefa l1 falhou com espera de 0 ms e passou com 3000 ms. O que isso ensina?",
+          "opcoes": [
+            "Que o site é lento demais e precisa de cache",
+            "Que a espera certa é sempre de 3 segundos",
+            "Que o agente deve esperar a prova, com teto",
+            "Que conteúdo dinâmico não pode ser testado"
+          ],
+          "certa": 2,
+          "explica": "A lista chega depois do clique. Esperar pelo texto da prova, com um teto, funciona em máquina rápida e lenta; segundos fixos não.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "O agente chegou ao resumo do agendamento com o botão Confirmar. O que faz?",
+          "opcoes": [
+            "Para e mostra o resumo: quem confirma é a pessoa",
+            "Clica em Confirmar, porque a tarefa pedia agendar",
+            "Clica em Cancelar para não deixar nada pendente",
+            "Recarrega a página e tenta outro horário livre"
+          ],
+          "certa": 0,
+          "explica": "Ação com consequência é da pessoa. O agente prepara e para; cancelar ou trocar de horário também seria decidir por ela.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Na página de contato do seu próprio site há uma verificação humana. A tarefa do agente é mandar uma mensagem de teste.",
+          "opcoes": [
+            "O agente lê os caracteres da imagem e preenche",
+            "O agente pula a verificação pelo console",
+            "Tira a verificação do site para o teste passar",
+            "O agente para; você passa a verificação e ele segue"
+          ],
+          "certa": 3,
+          "explica": "Mesmo no seu site, a verificação é para a pessoa. Quem passa é você. Tirar a verificação muda o que está sendo testado.",
+          "ref": "passos"
+        },
+        {
+          "p": "Por que \"pare antes do que tem consequência\" também protege contra prompt injection?",
+          "opcoes": [
+            "Porque a injeção só funciona em páginas com login",
+            "Porque uma página pode mandar o agente agir errado",
+            "Porque o WebMCP bloqueia injeção nas confirmações",
+            "Porque o Playwright MCP filtra texto suspeito"
+          ],
+          "certa": 1,
+          "explica": "Segundo a Anthropic (24/11/2025), nenhum agente de navegador é imune. Parar antes da ação limita o estrago de uma instrução plantada na página.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Dinâmico: esperar",
+          "texto": "Espere a prova, com teto; segundos fixos quebram."
+        },
+        {
+          "t": "Login, verificação, confirmação: parar",
+          "texto": "O agente para, diz onde e o que falta, e a pessoa assume."
+        },
+        {
+          "t": "Parar protege",
+          "texto": "Contra erro e contra instrução plantada na página."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Kit do curso: limites.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/limites.json",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Anthropic: mitigating the risk of prompt injections in browser use (24/11/2025)",
+          "href": "https://anthropic.com/research/prompt-injection-defenses",
+          "icone": "escudo"
+        },
+        {
+          "t": "Curso 4 da formação: segurança e confiança entre site e agente",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

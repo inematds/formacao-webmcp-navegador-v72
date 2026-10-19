@@ -1,0 +1,10 @@
+→ navigate_page {"url":"http://127.0.0.1:PORTA/","pageId":1}
+→ list_console_messages {"pageId":1}
+  [error] Failed to load resource: the server responded with a status of 404 (Not Found)
+  [error] promoções: falha ao carregar promocoes.json (HTTP 404)
+→ list_network_requests {"pageId":1}
+  GET http://127.0.0.1:PORTA/ [200]
+  GET http://127.0.0.1:PORTA/estilo.css [200]
+  GET http://127.0.0.1:PORTA/promocoes.json [404]
+erros no console: 2 · requisições: 3 · com falha: 1
+saída: 1

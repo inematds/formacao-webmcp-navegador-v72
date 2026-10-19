@@ -1,0 +1,261 @@
+{
+  "slug": "mapa",
+  "num": 1,
+  "menu": "Mapa",
+  "titulo": "O mapa de out/2026: computer use, extensões, navegadores com agente e ferramentas de dev",
+  "titulo_curto": "O mapa dos agentes",
+  "minutos": 15,
+  "lead": "Agente de navegador virou várias coisas diferentes: um modelo que olha a tela, uma extensão no seu Chrome, um navegador inteiro com agente dentro e ferramentas que dão um navegador ao Claude Code ou ao Codex. Nesta aula você separa as quatro famílias, lê o status de cada uma com data e deixa o kit do curso pronto.",
+  "objetivo": "situar computer use, extensões, navegadores com agente e ferramentas de dev, com status datado, e deixar o kit pronto.",
+  "competencias": [
+    "classificar-agentes-de-navegador",
+    "ler-status-com-data",
+    "preparar-o-kit"
+  ],
+  "aprende": [
+    {
+      "icone": "camadas",
+      "t": "As quatro famílias de agente de navegador"
+    },
+    {
+      "icone": "relogio",
+      "t": "Status com fonte e data, sem boato"
+    },
+    {
+      "icone": "terminal",
+      "t": "O kit: Playwright MCP e Chrome DevTools MCP com versão fixada"
+    },
+    {
+      "icone": "alvo",
+      "t": "Por que este curso testa com as ferramentas de dev"
+    }
+  ],
+  "hero_alt": "Monitor escuro com quatro janelas de navegador lado a lado, cada uma com um painel diferente, sob luz neutra.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Quatro famílias, um mesmo site",
+      "sub": "Clique em cada bloco.",
+      "nos": [
+        {
+          "icone": "robo",
+          "titulo": "Computer use",
+          "sub": "vê a tela",
+          "detalhe": "O modelo recebe capturas de tela e devolve cliques e teclas. Serve para qualquer programa, mas é o jeito mais caro e frágil. O benchmark de referência é o OSWorld: no artigo original, humanos fizeram 72,36% das tarefas e o melhor modelo da época, 12,24%. O OSWorld 2.0 saiu em 26/06/2026; o placar atual não foi conferido aqui."
+        },
+        {
+          "icone": "pasta",
+          "titulo": "Extensões",
+          "sub": "no seu Chrome",
+          "detalhe": "Um agente dentro do navegador que você já usa. O Claude para Chrome passou de preview para beta no plano Max em 24/11/2025, segundo a Anthropic, no mesmo post em que ela diz que nenhum agente de navegador é imune a prompt injection."
+        },
+        {
+          "icone": "nuvem",
+          "titulo": "Navegador com agente",
+          "sub": "agente embutido",
+          "detalhe": "O navegador inteiro foi feito em volta do agente. O ChatGPT Atlas (OpenAI) e o auto browse no Chrome (Google) aparecem na cobertura de imprensa; as páginas primárias não foram lidas, então ficam como relatado, não confirmado em 19/10/2026."
+        },
+        {
+          "icone": "terminal",
+          "titulo": "Ferramentas de dev",
+          "sub": "MCP de navegador",
+          "forte": true,
+          "detalhe": "Servidores MCP que dão um navegador ao seu agente de código: Playwright MCP (Microsoft, lê a árvore de acessibilidade) e Chrome DevTools MCP (Google, console, rede e desempenho). São estes que o curso usa: rodam na sua máquina, com versão fixada, contra páginas locais."
+        }
+      ],
+      "legenda": "As quatro chegam ao mesmo HTML. O que você testar com a quarta vale, em boa parte, para as outras três.",
+      "dica": "Status de out/2026 muda rápido: tudo aqui tem fonte e data."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Como ler o status de um agente",
+      "sub": "Três perguntas antes de acreditar.",
+      "passos": [
+        {
+          "titulo": "Quem disse?",
+          "sub": "fonte primária",
+          "texto": [
+            "Post do fabricante, documentação ou repositório oficial valem como fato. Matéria de imprensa e agregador valem como \"relatado por\".",
+            "Exemplo: o post da Anthropic de 24/11/2025 é fonte primária; a data de lançamento do Atlas, aqui, só veio da cobertura."
+          ]
+        },
+        {
+          "titulo": "Quando?",
+          "sub": "data na frase",
+          "texto": [
+            "Escreva a data junto do status: \"beta no plano Max em 24/11/2025\", e não \"está em beta\". Em seis meses a frase sem data vira mentira.",
+            "Versão de pacote também é status: o kit fixa <code>@playwright/mcp</code> 0.0.83 (28/09/2026) e <code>chrome-devtools-mcp</code> 1.10.1 (23/09/2026)."
+          ]
+        },
+        {
+          "titulo": "Roda onde?",
+          "sub": "sua máquina ou nuvem",
+          "texto": [
+            "Extensão e navegador com agente rodam na conta de alguém e gastam assinatura. As ferramentas de dev rodam local, contra 127.0.0.1, sem modelo nenhum se você quiser.",
+            "Por isso o curso ensaia tudo com elas e deixa o agente real para um passo opcional."
+          ],
+          "exemplo": {
+            "rot": "Regra do curso",
+            "texto": "Agente de navegador só contra a página do kit ou contra um site seu. Nada de login real, compra ou formulário de terceiros."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "O kit pronto em dois comandos",
+      "sub": "Instala as versões fixadas e confere as peças. O versoes.mjs não chama rede nem modelo.",
+      "blocos": [
+        {
+          "rot": "Terminal · instalar o kit",
+          "icone": "terminal",
+          "conteudo": "[ -d ~/projetos/formacao-webmcp-navegador-v72 ] || git clone -q https://github.com/inematds/formacao-webmcp-navegador-v72 ~/projetos/formacao-webmcp-navegador-v72\ncd ~/projetos/formacao-webmcp-navegador-v72/kit\nnpm ci --no-audit --no-fund && npx playwright install chromium; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · conferir as peças",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode versoes.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>node                   24.13.0\nplaywright             1.64.0 · Chromium 156.0.8078.4\n@playwright/mcp        0.0.83\nchrome-devtools-mcp    1.10.1\n@modelcontextprotocol/sdk 1.32.1 (cliente de ensaio, sem modelo)\nclaude (opcional)      2.1.303 (Claude Code)\ncodex (opcional)       codex-cli 0.163.0\nkit pronto: 4 de 4 peças obrigatórias\nsaída: 0</pre><p>Quatro peças obrigatórias: Node 20.19 ou mais novo (o chrome-devtools-mcp exige), o Playwright com o Chromium dele, o Playwright MCP e o Chrome DevTools MCP. Claude Code e Codex aparecem como opcionais: o curso inteiro roda sem eles.</p>"
+          },
+          {
+            "rot": "Instalação (19/10/2026)",
+            "html": "<pre>added 101 packages in 2s\nsaída: 0</pre><p>O <code>npm ci</code> instala exatamente o que está no <code>package-lock.json</code>. Na primeira vez, o <code>npx playwright install chromium</code> baixa o Chromium do Playwright (algumas centenas de MB); nas seguintes, não imprime nada.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "O kit na sua máquina e o seu mapa.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Kit pronto",
+          "min": "10 min",
+          "texto": "Rode os dois blocos. Se faltar uma peça, a linha dela começa por \"falta:\" e diz o que fazer.",
+          "pronto": "<code>node versoes.mjs</code> → <code>kit pronto: 4 de 4 peças obrigatórias</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · O seu mapa",
+          "min": "10 min",
+          "texto": "Crie mapa-agentes.md com três agentes de navegador que você ou seus clientes usam, uma linha por agente: família | agente | status | fonte | data. Status sem fonte vira \"relatado por\".",
+          "pronto": "<code>grep -c \"|\" mapa-agentes.md</code> → <code>3</code> ou mais, e toda linha tem uma data."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "Qual família de agente este curso usa para testar o site, e por quê?",
+          "opcoes": [
+            "Computer use, porque funciona com qualquer programa da máquina",
+            "Ferramentas de dev, porque rodam local, com versão fixada",
+            "Navegador com agente, porque é o que o cliente final usa",
+            "Extensões, porque já vêm instaladas em todo Chrome"
+          ],
+          "certa": 1,
+          "explica": "Playwright MCP e Chrome DevTools MCP rodam na sua máquina, contra 127.0.0.1, e dá para ensaiar sem modelo. As outras famílias rodam na conta de alguém e gastam assinatura.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Você leu numa matéria que um navegador com agente chegou ao Android em agosto. Como escreve isso no seu mapa?",
+          "opcoes": [
+            "Como fato, se a matéria for de um site conhecido e confiável",
+            "Não escreve: notícia de imprensa nunca serve",
+            "Como \"relatado por [site], não confirmado em [data]\"",
+            "Como fato, desde que outra matéria repita a data"
+          ],
+          "certa": 2,
+          "explica": "Sem a fonte primária, entra como relatado, com a data em que você conferiu. Duas matérias que copiam a mesma fonte continuam sendo segunda mão.",
+          "ref": "passos"
+        },
+        {
+          "p": "O que a Anthropic disse em 24/11/2025 sobre agentes de navegador e prompt injection?",
+          "opcoes": [
+            "Que nenhum agente de navegador é imune, mesmo com ~1% de ataques bem-sucedidos",
+            "Que o problema foi resolvido no Claude para Chrome",
+            "Que só extensões são vulneráveis; ferramentas de dev rodam isoladas e não correm risco",
+            "Que o risco some quando o site usa WebMCP"
+          ],
+          "certa": 0,
+          "explica": "O post diz que a taxa de ataque bem-sucedido caiu para ~1% e que isso \"still represents meaningful risk. No browser agent is immune\". O assunto a fundo é do curso 4.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Por que o kit fixa @playwright/mcp 0.0.83 em vez de usar a última versão?",
+          "opcoes": [
+            "Porque a última versão exige chave de API",
+            "Porque versões novas não rodam headless",
+            "Porque o npm bloqueia a instalação de versões com menos de um mês",
+            "Porque a saída capturada só vale para a versão testada"
+          ],
+          "certa": 3,
+          "explica": "A saída de cada bloco foi capturada com aquela versão, em 19/10/2026. Em versão nova, nomes de ferramenta e formato da resposta podem mudar.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Quatro famílias",
+          "texto": "Computer use, extensões, navegadores com agente e ferramentas de dev chegam ao mesmo HTML."
+        },
+        {
+          "t": "Status com data",
+          "texto": "Fonte primária é fato; o resto é \"relatado por\", com a data em que você conferiu."
+        },
+        {
+          "t": "Testar local",
+          "texto": "Playwright MCP e DevTools MCP rodam na sua máquina, com versão fixada e sem gastar cota."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Anthropic: mitigating the risk of prompt injections in browser use (24/11/2025)",
+          "href": "https://anthropic.com/research/prompt-injection-defenses",
+          "icone": "escudo"
+        },
+        {
+          "t": "Playwright MCP (Microsoft)",
+          "href": "https://github.com/microsoft/playwright-mcp",
+          "icone": "lupa"
+        },
+        {
+          "t": "Chrome DevTools MCP (Google)",
+          "href": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+          "icone": "lupa"
+        },
+        {
+          "t": "OSWorld: benchmark de computer use",
+          "href": "https://os-world.github.io/",
+          "icone": "grafico"
+        },
+        {
+          "t": "Curso 0 da formação: como os agentes usam um site hoje",
+          "href": "https://inematds.github.io/formacao-webmcp-base-v72/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "slug": "contrato",
+  "num": 5,
+  "menu": "Contrato",
+  "titulo": "Contrato de tarefa para agente de navegador (objetivo, limites, prova, parada)",
+  "titulo_curto": "O contrato da tarefa",
+  "minutos": 15,
+  "lead": "\"Agende uma revisão pra mim no site\" parece um pedido. Para um agente de navegador, falta tudo: em que página, o que ele pode tocar, como provar que acabou e quando parar. Nesta aula você escreve o contrato de uma tarefa em quatro partes e confere com um script que o contrato está completo antes de entregar a qualquer agente.",
+  "objetivo": "escrever o contrato de uma tarefa de navegador com objetivo, limites, prova e parada, e conferir que está completo.",
+  "competencias": [
+    "escrever-contrato-de-tarefa",
+    "definir-prova-observavel",
+    "definir-parada"
+  ],
+  "aprende": [
+    {
+      "icone": "alvo",
+      "t": "Objetivo: onde e o quê"
+    },
+    {
+      "icone": "cadeado",
+      "t": "Limites: o que pode e o que não pode"
+    },
+    {
+      "icone": "check",
+      "t": "Prova: o texto que se vê na página"
+    },
+    {
+      "icone": "portao",
+      "t": "Parada: quando parar e chamar a pessoa"
+    }
+  ],
+  "hero_alt": "Mesa de trabalho escura com uma folha de checklist ao lado de um teclado e um monitor com um formulário, luz neutra.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "As quatro partes",
+      "sub": "Clique em cada bloco. Leia de baixo para cima quando revisar.",
+      "estilo": "escada",
+      "nos": [
+        {
+          "icone": "alvo",
+          "titulo": "Objetivo",
+          "sub": "onde e o quê",
+          "detalhe": "A página exata e o resultado útil: \"Na página http://127.0.0.1:8433/agendar.html, descobrir os horários livres de Troca de pneu em 2026-11-03.\" Sem o lugar, o agente escolhe por conta própria."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Limites",
+          "sub": "pode × não pode",
+          "detalhe": "O que ele pode fazer e, com todas as letras, o que não pode: \"Não clique em Agendar às… nem em Confirmar. Não saia de http://127.0.0.1:8433/.\" Tudo fora da lista é intocável."
+        },
+        {
+          "icone": "check",
+          "titulo": "Prova",
+          "sub": "o que se vê",
+          "forte": true,
+          "detalhe": "Um texto que aparece na página quando acabou, entre aspas: \"4 horários livres para Troca de pneu em 2026-11-03.\" A frase \"concluído\" não é prova; captura de tela sozinha também não."
+        },
+        {
+          "icone": "x",
+          "titulo": "Parada",
+          "sub": "quando parar",
+          "detalhe": "Quando parar e chamar a pessoa (login, verificação humana, confirmação) e um orçamento: \"Pare depois de 10 ações sem chegar à prova.\" Parar com o motivo exato é um resultado previsto, não um fracasso."
+        }
+      ],
+      "legenda": "Sem prova, o resultado é promessa. Sem limites, o site inteiro está em jogo. Sem parada, o agente insiste até inventar."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Escrevendo cada parte",
+      "sub": "O que o conferir-contrato.mjs cobra e por quê.",
+      "passos": [
+        {
+          "titulo": "Objetivo",
+          "sub": "com lugar",
+          "texto": [
+            "20 letras ou mais e um lugar: endereço ou nome da página. \"No site da oficina\" não serve; \"na página agendar.html\" serve.",
+            "Uma tarefa, um resultado. Duas coisas viram dois contratos."
+          ]
+        },
+        {
+          "titulo": "Limites",
+          "sub": "com um \"não\"",
+          "texto": [
+            "O script exige pelo menos um \"não\": o agente precisa saber o que não fazer. Em teste de site, quase sempre: não confirmar, não pagar, não sair do endereço.",
+            "Limite de dado também conta: \"não digite senha\", \"não use dado de outra pessoa\"."
+          ]
+        },
+        {
+          "titulo": "Prova",
+          "sub": "entre aspas",
+          "texto": [
+            "Um texto literal, entre aspas, que você consegue procurar na página. É o mesmo texto que o robô de ensaio da aula 6 vai esperar.",
+            "Peça também a evidência copiada da página: \"devolva os horários copiados da lista, não de memória\"."
+          ]
+        },
+        {
+          "titulo": "Parada",
+          "sub": "com número",
+          "texto": [
+            "Os sinais (login, verificação, confirmação) e um número: 10 ações, 3 tentativas. O script exige um número.",
+            "Peça o bloqueio bem reportado: onde parou, o que falta e a ação de que a pessoa precisa."
+          ],
+          "exemplo": {
+            "rot": "Bloqueio bem reportado",
+            "texto": "\"Parei na tela de login de conta.html: pede e-mail e senha. Falta: login do dono da conta. Nada foi enviado.\" Melhor que \"não consegui\"."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Um contrato completo e um vago",
+      "sub": "O mesmo script confere os dois. Os títulos das partes também valem em inglês e espanhol (Goal, Limits, Proof, Stop; Objetivo, Límites, Prueba, Parada).",
+      "blocos": [
+        {
+          "rot": "Arquivo · kit/contratos/exemplo.md",
+          "icone": "arquivo",
+          "conteudo": "# Contrato: horários de troca de pneu\n\n## Objetivo\nNa página http://127.0.0.1:8433/agendar.html, descobrir os horários livres de \"Troca de pneu\" em 2026-11-03.\n\n## Limites\nPode preencher o formulário e clicar em \"Ver horários\". Não clique em \"Agendar às…\" nem em \"Confirmar\". Não saia de http://127.0.0.1:8433/.\n\n## Prova\nA página mostra \"4 horários livres para Troca de pneu em 2026-11-03.\" Devolva os horários copiados da lista, não de memória.\n\n## Parada\nPare e descreva a tela se aparecer login, verificação humana ou pedido de confirmação. Pare depois de 10 ações sem chegar à prova."
+        },
+        {
+          "rot": "Terminal · conferir o contrato completo",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-contrato.mjs contratos/exemplo.md; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · conferir o contrato vago",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-contrato.mjs contratos/vago.md; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>contrato ok: 4/4 partes (objetivo, limites, prova, parada) · contratos/exemplo.md\nsaída: 0</pre><p>As quatro partes presentes, cada uma com o que o script cobra.</p>"
+          },
+          {
+            "rot": "Erro comum: o pedido vago",
+            "html": "<pre>contrato incompleto: 0/4 partes · contratos/vago.md\n  falta: objetivo sem o lugar (endereço ou página)\n  falta: limites (o que pode e o que não pode)\n  falta: prova (o que se vê na página quando acabou)\n  falta: parada (quando parar e chamar a pessoa)\nsaída: 1</pre><p>\"Agende uma revisão pra mim no site da oficina\" não diz a página, não tem limite, não tem prova e não tem parada. Um agente com esse pedido pode clicar em Confirmar.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "Do vago ao completo, e um contrato do seu site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Consertar o vago",
+          "min": "10 min",
+          "texto": "Copie kit/contratos/vago.md para meu-contrato.md e reescreva até o script aceitar. Use a página conta.html: a prova é a lista de agendamentos e a parada, a tela de login.",
+          "pronto": "<code>node conferir-contrato.mjs meu-contrato.md</code> → <code>contrato ok: 4/4 partes</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Uma tarefa do seu site",
+          "min": "15 min",
+          "texto": "Escreva o contrato de uma tarefa real do seu site (local ou em homologação), só de leitura. A prova tem de ser um texto que você acha na página agora.",
+          "pronto": "<code>node conferir-contrato.mjs contrato-site.md</code> → <code>contrato ok: 4/4 partes</code>, e o texto da prova aparece com <code>Ctrl+F</code> na página."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "Qual destas frases serve como prova num contrato de tarefa?",
+          "opcoes": [
+            "\"O agente diz que terminou a tarefa com sucesso\"",
+            "\"Uma captura de tela da página inteira tirada logo depois do clique\"",
+            "\"A tarefa leva menos de um minuto para rodar\"",
+            "\"A página mostra 4 horários livres para Troca de pneu\""
+          ],
+          "certa": 3,
+          "explica": "Prova é um texto que se confere na página. A frase do agente é promessa; a captura sozinha não diz o que conferir; tempo não é resultado.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "O agente chegou à tela de login no meio da tarefa. O que o contrato manda?",
+          "opcoes": [
+            "Parar, dizer onde parou e o que falta para seguir",
+            "Tentar o e-mail de teste que estiver no formulário",
+            "Voltar à página inicial e procurar outro caminho",
+            "Criar uma conta nova para poder continuar"
+          ],
+          "certa": 0,
+          "explica": "Login é sinal de parada. O bloqueio bem reportado diz a tela, o que falta e a ação da pessoa. Criar conta ou tentar senha fere os limites.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "Por que o conferir-contrato.mjs exige um \"não\" nos limites?",
+          "opcoes": [
+            "Porque contrato sem negação é mais difícil de ler",
+            "Porque o agente precisa saber o que não pode fazer",
+            "Porque o Playwright MCP só aceita limites negativos",
+            "Porque o script não consegue ler frases afirmativas"
+          ],
+          "certa": 1,
+          "explica": "Limites dizem o que pode e o que não pode. Em teste de site, o \"não\" protege o que tem consequência: confirmar, pagar, sair do endereço.",
+          "ref": "passos"
+        },
+        {
+          "p": "A parada diz \"pare se travar\". O que falta?",
+          "opcoes": [
+            "Um endereço de e-mail para avisar quando parar",
+            "O nome do modelo que vai rodar a tarefa",
+            "Um número (ações ou tentativas) e os sinais de parada",
+            "Uma captura de tela da página antes de começar"
+          ],
+          "certa": 2,
+          "explica": "\"Travar\" o agente decide sozinho. Um orçamento (10 ações) e sinais claros (login, verificação, confirmação) tornam a parada verificável.",
+          "ref": "diagrama"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Quatro partes",
+          "texto": "Objetivo com lugar, limites com um \"não\", prova entre aspas, parada com número."
+        },
+        {
+          "t": "Prova não é frase",
+          "texto": "É um texto que você procura na página e acha."
+        },
+        {
+          "t": "Parar é resultado",
+          "texto": "Parar com o motivo exato vale mais que insistir e inventar."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Kit do curso: conferir-contrato.mjs e contratos/",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/tree/main/kit/contratos",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Formação LOOP-R Engenharia: verificação e evals a fundo",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

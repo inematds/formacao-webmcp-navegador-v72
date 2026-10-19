@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Widget de frete (outra origem)</title>
+</head>
+<body>
+<p>Widget de frete: servido de outra origem (outra porta) e embutido na vitrine.</p>
+<script type="module">
+// Ferramentas de um iframe de OUTRA origem (aula 4). Rascunho WebMCP de 16/10/2026, experimental.
+const topo = new URLSearchParams(location.search).get('topo');   // origem da página que embute o widget
+const r = [];
+if ('modelContext' in document) {
+  try {
+    await document.modelContext.registerTool({ name: 'widget_privado', description: 'Calcula frete. Sem exposedTo: visível só pela regra padrão.',
+      inputSchema: { type: 'object', properties: {} }, annotations: { readOnlyHint: true }, execute: async () => ({ frete: 'R$ 0,00' }) });
+    await document.modelContext.registerTool({ name: 'widget_exposto', description: 'Calcula frete. exposedTo: a origem da vitrine.',
+      inputSchema: { type: 'object', properties: {} }, annotations: { readOnlyHint: true }, execute: async () => ({ frete: 'R$ 0,00' }) },
+      { exposedTo: [topo] });
+    r.push('registrou 2');
+  } catch (e) { r.push(`${e.name}: ${e.message}`); }
+} else r.push('sem document.modelContext');
+document.body.dataset.registro = r.join(' · ');
+</script>
+</body>
+</html>

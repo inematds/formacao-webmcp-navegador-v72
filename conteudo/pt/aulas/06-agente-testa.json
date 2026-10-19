@@ -1,0 +1,271 @@
+{
+  "slug": "agente-testa",
+  "num": 6,
+  "menu": "Bateria",
+  "titulo": "Um agente testa o seu site: tarefas com critério e resultado em arquivo",
+  "titulo_curto": "Um agente testa o site",
+  "minutos": 20,
+  "lead": "Teste que só existe na conversa com o agente some quando a conversa acaba. Aqui cada tarefa vira uma entrada num arquivo de bateria, com o contrato da aula 5, e cada execução grava uma linha de resultado. O robô de ensaio roda sem modelo; no passo opcional, o seu agente roda a mesma bateria e um script confere o formato.",
+  "objetivo": "rodar uma bateria de tarefas contra o site e gravar o resultado em arquivo, no ensaio e com o seu agente.",
+  "competencias": [
+    "escrever-bateria-de-tarefas",
+    "gravar-resultado-em-arquivo",
+    "conferir-formato-sem-depender-do-modelo"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "O arquivo de bateria: contrato + passos + o que se espera"
+    },
+    {
+      "icone": "robo",
+      "t": "O robô de ensaio: papéis e nomes da árvore, sem modelo"
+    },
+    {
+      "icone": "arquivo",
+      "t": "resultados/*.jsonl: uma linha por tarefa"
+    },
+    {
+      "icone": "chip",
+      "t": "O mesmo teste com o seu agente, conferido pelo formato"
+    }
+  ],
+  "hero_alt": "Robô humanoide industrial sentado diante de um monitor escuro com um formulário aberto, numa bancada de testes, luz neutra.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Da bateria ao arquivo de resultado",
+      "sub": "Clique em cada bloco.",
+      "nos": [
+        {
+          "icone": "lista",
+          "titulo": "Bateria",
+          "sub": "bateria.json",
+          "detalhe": "Cada tarefa tem id, objetivo, limites, prova, parada, o que se espera (<code>\"espera\": \"ok\"</code> ou <code>\"parar\"</code>) e os passos do ensaio. A t3 espera parar: é a tela de login."
+        },
+        {
+          "icone": "robo",
+          "titulo": "Ensaio",
+          "sub": "sem modelo",
+          "forte": true,
+          "detalhe": "O rodar-bateria.mjs segue os passos pelos papéis e nomes da árvore (getByLabel, getByRole), confere a prova e respeita a parada. É rápido, grátis e repetível: roda a cada mudança do site."
+        },
+        {
+          "icone": "cerebro",
+          "titulo": "Seu agente",
+          "sub": "opcional",
+          "detalhe": "O Claude Code (ou o Codex) recebe a mesma bateria como pedido, montado pelo prompt-agente.mjs, e usa só o Playwright MCP. Gasta a sua assinatura: rode com parcimônia."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Resultado",
+          "sub": "uma linha por tarefa",
+          "detalhe": "resultados/bateria.jsonl (ensaio) e resultados/agente.jsonl (agente). O conferir-resultados.mjs confere só o formato da resposta do agente: uma linha JSON válida por tarefa, com status ok, falhou ou parou."
+        }
+      ],
+      "legenda": "O ensaio diz se o site funciona. O agente diz se um agente consegue usar o site. Os dois gravam em arquivo."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Lendo o resultado",
+      "sub": "O que vale como teste que passou.",
+      "passos": [
+        {
+          "titulo": "Esperado × obtido",
+          "sub": "✓ e ✗",
+          "texto": [
+            "Uma tarefa passa quando termina como o arquivo espera: <code>ok</code> com a prova vista, ou <code>parou</code> no sinal certo. A t3 passou parando no login.",
+            "O script sai com 0 só se todas terminaram como esperado. Dá para pôr no CI."
+          ]
+        },
+        {
+          "titulo": "Agente: só o formato",
+          "sub": "nunca o texto",
+          "texto": [
+            "A resposta do modelo muda a cada execução. O \"pronto quando\" do passo com agente confere estrutura: uma linha JSON por tarefa e o status dentro de três valores. Linhas fora do formato são contadas e ignoradas.",
+            "Comparar o que o agente disse com o que o ensaio viu é leitura sua, não critério automático."
+          ]
+        },
+        {
+          "titulo": "Quem testa quem",
+          "sub": "regra do curso",
+          "texto": [
+            "O agente de teste só observa e reporta: não conserta o site no meio do teste. Achou falha, a linha diz onde, e a correção vem depois, com o mesmo teste rodando de novo.",
+            "Só contra o kit ou um site seu."
+          ],
+          "exemplo": {
+            "rot": "Avaliação a fundo",
+            "texto": "Bateria congelada, regressão e evals de agente são da Formação LOOP-R Engenharia (verificação) e do curso 5 desta formação."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A bateria do kit, no ensaio",
+      "sub": "Três tarefas: duas que terminam e uma que tem de parar.",
+      "blocos": [
+        {
+          "rot": "Arquivo · kit/bateria.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"site\": \"kit\",\n  \"tarefas\": [\n    {\n      \"id\": \"t1-horarios\",\n      \"objetivo\": \"Na página agendar.html, ver os horários livres de Revisão completa em 2026-11-03.\",\n      \"limites\": \"Só preencher e clicar em Ver horários. Não clicar em Agendar às… nem em Confirmar.\",\n      \"prova\": { \"texto\": \"2 horários livres para Revisão completa\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [\n        { \"abrir\": \"agendar.html\" },\n        { \"preencher\": [\"Seu nome\", \"Ana\"] },\n        { \"escolher\": [\"Serviço\", \"Revisão completa\"] },\n        { \"clicar\": \"Ver horários\" }\n      ]\n    },\n    {\n      \"id\": \"t2-servicos\",\n      \"objetivo\": \"Na página inicial (index.html), achar quanto tempo leva a troca de pneu.\",\n      \"limites\": \"Só ler a página inicial. Não preencher nada.\",\n      \"prova\": { \"texto\": \"Troca de pneu: 20 minutos\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [{ \"abrir\": \"index.html\" }]\n    },\n    {\n      \"id\": \"t3-minha-conta\",\n      \"objetivo\": \"Na página conta.html, ver os meus agendamentos.\",\n      \"limites\": \"Não digitar e-mail nem senha. Não criar conta.\",\n      \"prova\": { \"texto\": \"Seus agendamentos\" },\n      \"parada\": \"Pare na tela de login e diga o que falta. Pare depois de 10 ações.\",\n      \"espera\": \"parar\",\n      \"passos\": [{ \"abrir\": \"conta.html\" }]\n    }\n  ]\n}"
+        },
+        {
+          "rot": "Terminal · rodar a bateria",
+          "icone": "robo",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs bateria.json; echo \"saída: $?\"\nhead -n 1 resultados/bateria.jsonl"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: bateria.json · site: http://127.0.0.1:PORTA/ · espera: 3000 ms\n✓ t1-horarios        ok      viu \"2 horários livres para Revisão completa\"\n✓ t2-servicos        ok      viu \"Troca de pneu: 20 minutos\"\n✓ t3-minha-conta     parou   login exigido (depois de \"abrir\")\n3 tarefas · 3 como esperado (ok 2 · parou 1 · falhou 0) · resultados/bateria.jsonl\nsaída: 0\n{\"id\":\"t1-horarios\",\"esperado\":\"ok\",\"status\":\"ok\",\"motivo\":\"viu \\\"2 horários livres para Revisão completa\\\"\",\"ms\":2156}</pre><p>Três ✓: t1 e t2 viram a prova; t3 parou no login, como o arquivo espera. A última linha é a primeira entrada de <code>resultados/bateria.jsonl</code>.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A mesma bateria com o seu agente (opcional)",
+      "sub": "Um claude -p com o Playwright MCP do kit e só as ferramentas de navegador liberadas. Gasta a sua assinatura; rode uma vez.",
+      "blocos": [
+        {
+          "rot": "Terminal · o seu agente roda a bateria",
+          "icone": "chip",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nmkdir -p resultados; node servir.mjs & SRV=$!; sleep 1\nnode configurar.mjs > /dev/null\nclaude -p \"$(node prompt-agente.mjs bateria.json)\" --mcp-config .mcp.json --strict-mcp-config \\\n  --allowedTools \"mcp__playwright__browser_navigate mcp__playwright__browser_snapshot mcp__playwright__browser_type mcp__playwright__browser_select_option mcp__playwright__browser_click mcp__playwright__browser_wait_for\" \\\n  > resultados/agente.jsonl; echo \"claude: saída $?\"\nkill $SRV\nnode conferir-resultados.mjs resultados/agente.jsonl bateria.json; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>site do kit em http://127.0.0.1:8433/ (Ctrl+C para parar)\nclaude: saída 0\n  t1-horarios        ok\n  t2-servicos        ok\n  t3-minha-conta     parou\nlinhas JSON válidas: 3 de 3 tarefas · linhas ignoradas: 0\nsaída: 0</pre><p>Três linhas JSON válidas, uma por tarefa. É tudo o que o critério confere.</p>"
+          },
+          {
+            "rot": "O arquivo do agente (19/10/2026)",
+            "html": "<pre>{\"id\": \"t1-horarios\", \"status\": \"ok\", \"evidencia\": \"2 horários livres para Revisão completa em 2026-11-03.\"}\n{\"id\": \"t2-servicos\", \"status\": \"ok\", \"evidencia\": \"Troca de pneu: 20 minutos\"}\n{\"id\": \"t3-minha-conta\", \"status\": \"parou\", \"evidencia\": \"Tela de login: \\\"Entre para ver os seus agendamentos.\\\" com campos E-mail e Senha e botão Entrar; falta login (e-mail e senha do dono da conta)\"}</pre><p>Nesta execução o agente chegou aos mesmos três status do ensaio e descreveu o bloqueio da t3. Outra execução pode escrever diferente; por isso o critério é o formato.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "O ensaio sempre; o agente uma vez.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · A bateria no ensaio",
+          "min": "10 min",
+          "texto": "Rode a bateria. Depois troque a prova da t2 para \"Troca de pneu: 30 minutos\" numa cópia (bateria-erro.json) e rode a cópia.",
+          "pronto": "<code>node rodar-bateria.mjs bateria.json</code> → <code>3 tarefas · 3 como esperado</code> e <code>saída: 0</code>; a cópia → <code>✗ t2-servicos falhou</code> e <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · O seu agente (opcional)",
+          "min": "15 min",
+          "texto": "Com o Claude Code instalado, rode o bloco do agente uma vez. No Codex, monte o pedido com node prompt-agente.mjs bateria.json e rode com os servidores do config.toml.",
+          "pronto": "<code>node conferir-resultados.mjs resultados/agente.jsonl bateria.json</code> → <code>linhas JSON válidas: 3 de 3 tarefas</code> e <code>saída: 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "A tarefa t3 terminou com status parou. A bateria passou?",
+          "opcoes": [
+            "Não: qualquer parada é uma falha do site",
+            "Sim, porque o arquivo espera que a t3 pare no login",
+            "Só se o agente tiver tentado fazer o login antes",
+            "Não, porque a prova \"Seus agendamentos\" não apareceu"
+          ],
+          "certa": 1,
+          "explica": "Cada tarefa declara o que se espera. Na t3, \"espera\": \"parar\": parar no login é o resultado certo.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "O que o \"pronto quando\" do passo com o seu agente confere?",
+          "opcoes": [
+            "Uma linha JSON válida por tarefa, com status conhecido",
+            "Que o texto do agente seja igual, palavra por palavra, ao do ensaio",
+            "Que o agente use menos de 10 ações por tarefa",
+            "Que o modelo explique cada clique na resposta"
+          ],
+          "certa": 0,
+          "explica": "O texto do modelo muda a cada execução. O critério é estrutural: formato e status dentro de ok, falhou ou parou.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "Por que o ensaio sem modelo continua útil quando você tem um agente real?",
+          "opcoes": [
+            "Porque o agente real só funciona depois do ensaio",
+            "Porque o ensaio usa coordenadas e o agente, refs",
+            "Porque é grátis e repetível: roda a cada mudança",
+            "Porque o ensaio também testa o modelo que você usa"
+          ],
+          "certa": 2,
+          "explica": "O ensaio diz se o site funciona, rápido e sem custo. O agente diz se um agente consegue usar o site, e custa assinatura.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "No meio do teste, o agente achou um bug no site. O que ele deve fazer?",
+          "opcoes": [
+            "Corrigir o HTML e seguir com a próxima tarefa",
+            "Tentar de novo até a prova aparecer na página",
+            "Pular a tarefa sem gravar linha no resultado",
+            "Registrar onde falhou e seguir sem mexer no site"
+          ],
+          "certa": 3,
+          "explica": "O teste observa e reporta. A correção vem depois, e o mesmo teste roda de novo para provar que corrigiu.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Teste em arquivo",
+          "texto": "Bateria com contrato e resultado em .jsonl sobrevivem à conversa."
+        },
+        {
+          "t": "Ensaio sempre",
+          "texto": "O robô sem modelo roda a cada mudança, de graça."
+        },
+        {
+          "t": "Agente pelo formato",
+          "texto": "O passo com agente confere estrutura, nunca o texto do modelo."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Kit do curso: rodar-bateria.mjs e bateria.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/rodar-bateria.mjs",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Formação LOOP-R Engenharia: verificação e evals",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/",
+          "icone": "seta"
+        },
+        {
+          "t": "Claude Code: modo não interativo (claude -p)",
+          "href": "https://docs.claude.com/en/docs/claude-code/cli-reference",
+          "icone": "terminal"
+        }
+      ]
+    }
+  ]
+}

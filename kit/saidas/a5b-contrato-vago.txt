@@ -1,0 +1,6 @@
+contrato incompleto: 0/4 partes · contratos/vago.md
+  falta: objetivo sem o lugar (endereço ou página)
+  falta: limites (o que pode e o que não pode)
+  falta: prova (o que se vê na página quando acabou)
+  falta: parada (quando parar e chamar a pessoa)
+saída: 1

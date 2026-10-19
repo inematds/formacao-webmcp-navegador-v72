@@ -1,0 +1,7 @@
+Chromium 156.0.8078.4 (Playwright) · modo: sem
+→ browser_navigate {"url":"http://127.0.0.1:PORTA/agendar.html"}
+  nenhuma ferramenta WebMCP na página
+→ tools/list: 25 ferramentas do navegador + 0 da página
+  sem ferramentas: o agente usa a tela (snapshot + clique), como na aula 2
+  formulário na árvore: sim (textbox "Seu nome", button "Ver horários")
+saída: 0

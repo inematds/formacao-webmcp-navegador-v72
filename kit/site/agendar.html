@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agendar revisão · Oficina Pedal Livre</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header>
+  <p class="marca">Oficina Pedal Livre</p>
+  <nav aria-label="Principal">
+    <a href="index.html">Início</a> · <a href="agendar.html">Agendar</a> · <a href="conta.html">Minha conta</a> · <a href="contato.html">Contato</a>
+  </nav>
+</header>
+<main>
+  <h1>Agendar revisão</h1>
+  <form id="form">
+    <label for="nome">Seu nome</label>
+    <input id="nome" name="nome" autocomplete="name" required>
+    <label for="servico">Serviço</label>
+    <select id="servico" name="servico">
+      <option>Revisão básica</option>
+      <option>Revisão completa</option>
+      <option>Troca de pneu</option>
+    </select>
+    <label for="data">Data</label>
+    <input id="data" name="data" type="date" value="2026-11-03">
+    <button type="button" id="ver">Ver horários</button>
+  </form>
+  <section aria-labelledby="h-t">
+    <h2 id="h-t">Horários livres</h2>
+    <p id="estado" role="status">Escolha o serviço e a data e clique em Ver horários.</p>
+    <ul id="horarios"></ul>
+  </section>
+  <section id="confirmar" hidden aria-labelledby="c-t">
+    <h2 id="c-t">Confirmar agendamento</h2>
+    <p id="resumo"></p>
+    <button type="button" id="sim">Confirmar</button>
+    <button type="button" id="nao">Cancelar</button>
+  </section>
+  <p id="feito" role="status"></p>
+</main>
+<script type="module">
+// A regra do site (a mesma para a pessoa e para o agente).
+const AGENDA = {
+  'Revisão básica': ['09:00', '10:00', '14:00'],
+  'Revisão completa': ['08:00', '13:00'],
+  'Troca de pneu': ['09:30', '11:30', '15:30', '16:30']
+};
+const SERVICOS = Object.keys(AGENDA);
+const $ = id => document.getElementById(id);
+
+// Conteúdo dinâmico (aula 7): os horários chegam 1,5 s depois do clique, como uma chamada de rede.
+function buscarHorarios(servico, data) {
+  return new Promise(ok => setTimeout(() => ok(AGENDA[servico] || []), 1500));
+}
+async function mostrarHorarios(servico, data) {
+  $('estado').textContent = 'Carregando horários…';
+  $('horarios').innerHTML = '';
+  const lista = await buscarHorarios(servico, data);
+  $('estado').textContent = `${lista.length} horários livres para ${servico} em ${data}.`;
+  for (const h of lista) {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = `Agendar às ${h}`;
+    b.onclick = () => pedirConfirmacao({ servico, data, horario: h, nome: $('nome').value || 'sem nome' });
+    li.append(b); $('horarios').append(li);
+  }
+  return lista;
+}
+// Ação com consequência: só acontece se a pessoa clicar em Confirmar.
+function pedirConfirmacao(pedido, signal) {
+  $('resumo').textContent = `${pedido.nome} · ${pedido.servico} · ${pedido.data} às ${pedido.horario}`;
+  $('confirmar').hidden = false;
+  return new Promise((ok, falha) => {
+    const fim = r => { $('confirmar').hidden = true; ok(r); };
+    $('sim').onclick = () => { $('feito').textContent = `Agendamento recebido: ${$('resumo').textContent}.`; fim(true); };
+    $('nao').onclick = () => fim(false);
+    signal?.addEventListener('abort', () => { $('confirmar').hidden = true; falha(signal.reason); });
+  });
+}
+$('ver').onclick = () => mostrarHorarios($('servico').value, $('data').value);
+
+// WebMCP (rascunho do W3C Web Machine Learning Community Group de 16/10/2026): experimental, pode mudar.
+// Detecção de recurso + fallback: sem document.modelContext, nada é registrado e o formulário acima funciona igual.
+if ('modelContext' in document) {
+  const ciclo = new AbortController();
+  const opcoes = { signal: ciclo.signal };
+  await document.modelContext.registerTool({
+    name: 'consultar_horarios',
+    description: 'Lista os horários livres de um serviço numa data. Só lê: não agenda nada.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        servico: { type: 'string', enum: SERVICOS, description: 'Serviço da oficina.' },
+        data: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Data no formato AAAA-MM-DD.' }
+      },
+      required: ['servico', 'data'],
+      additionalProperties: false
+    },
+    annotations: { readOnlyHint: true },
+    async execute({ servico, data }) {
+      $('servico').value = servico; $('data').value = data;
+      const horarios = await mostrarHorarios(servico, data);   // a pessoa vê o mesmo que o agente recebe
+      return { servico, data, horarios };
+    }
+  }, opcoes);
+  await document.modelContext.registerTool({
+    name: 'agendar_revisao',
+    description: 'Prepara um agendamento e pede à pessoa que confirme na tela. Só agenda se ela clicar em Confirmar.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        servico: { type: 'string', enum: SERVICOS },
+        data: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
+        horario: { type: 'string', pattern: '^\\d{2}:\\d{2}$' },
+        nome: { type: 'string', minLength: 2, maxLength: 80 }
+      },
+      required: ['servico', 'data', 'horario', 'nome'],
+      additionalProperties: false
+    },
+    annotations: { consequentialHint: true },
+    async execute(pedido, extra) {
+      if (!(AGENDA[pedido.servico] || []).includes(pedido.horario)) return { agendado: false, erro: 'horário indisponível' };
+      const ok = await pedirConfirmacao(pedido, extra?.signal);
+      return ok ? { agendado: true, ...pedido } : { agendado: false, motivo: 'a pessoa cancelou na tela' };
+    }
+  }, opcoes);
+  document.documentElement.dataset.webmcp = 'registrado';
+} else {
+  document.documentElement.dataset.webmcp = 'ausente';
+}
+</script>
+</body>
+</html>

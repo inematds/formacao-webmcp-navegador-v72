@@ -1,0 +1,7 @@
+Chromium 156.0.8078.4 (Playwright) · bateria: bateria.json · site: http://127.0.0.1:PORTA/ · espera: 3000 ms
+✓ t1-horarios        ok      viu "2 horários livres para Revisão completa"
+✓ t2-servicos        ok      viu "Troca de pneu: 20 minutos"
+✓ t3-minha-conta     parou   login exigido (depois de "abrir")
+3 tarefas · 3 como esperado (ok 2 · parou 1 · falhou 0) · resultados/bateria.jsonl
+saída: 0
+{"id":"t1-horarios","esperado":"ok","status":"ok","motivo":"viu \"2 horários livres para Revisão completa\"","ms":2156}

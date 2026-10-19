@@ -1,0 +1,6 @@
+node_modules/
+pw-config.json
+.mcp.json
+resultados/
+minha-bateria.json
+.playwright-mcp/

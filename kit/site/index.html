@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oficina Pedal Livre</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header>
+  <p class="marca">Oficina Pedal Livre</p>
+  <nav aria-label="Principal">
+    <a href="index.html">Início</a> · <a href="agendar.html">Agendar</a> · <a href="conta.html">Minha conta</a> · <a href="contato.html">Contato</a>
+  </nav>
+</header>
+<main>
+  <h1>Oficina Pedal Livre</h1>
+  <p>Site fictício do kit da Formação WebMCP (INEMA.CLUB). Roda só em 127.0.0.1.</p>
+  <h2>Serviços</h2>
+  <ul>
+    <li>Revisão básica: 40 minutos</li>
+    <li>Revisão completa: 90 minutos</li>
+    <li>Troca de pneu: 20 minutos</li>
+  </ul>
+  <p><a href="agendar.html">Agendar uma revisão</a></p>
+  <section aria-labelledby="promo-t">
+    <h2 id="promo-t">Promoções</h2>
+    <p id="promo">Carregando…</p>
+  </section>
+</main>
+<script>
+  // Promoções vêm de promocoes.json. O arquivo não existe no kit de propósito (aula 3):
+  // a página mostra "sem promoções", mas o console e a rede registram a falha.
+  fetch('promocoes.json')
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(p => { document.getElementById('promo').textContent = p.texto; })
+    .catch(e => {
+      console.error('promoções: falha ao carregar promocoes.json (' + e.message + ')');
+      document.getElementById('promo').textContent = 'Sem promoções no momento.';
+    });
+</script>
+</body>
+</html>

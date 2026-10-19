@@ -1,0 +1,259 @@
+{
+  "slug": "contrato",
+  "num": 5,
+  "menu": "Contract",
+  "titulo": "Task contract for a browser agent (goal, limits, proof, stop)",
+  "titulo_curto": "The task contract",
+  "minutos": 15,
+  "lead": "\"Book a service for me on the site\" sounds like a request. For a browser agent, everything is missing: which page, what it can touch, how to prove it is done, and when to stop. In this lesson you write a task contract in four parts and check with a script that the contract is complete before handing it to any agent.",
+  "objetivo": "write the contract for a browser task with goal, limits, proof and stop, and check that it is complete.",
+  "competencias": [
+    "escrever-contrato-de-tarefa",
+    "definir-prova-observavel",
+    "definir-parada"
+  ],
+  "aprende": [
+    {
+      "icone": "alvo",
+      "t": "Goal: where and what"
+    },
+    {
+      "icone": "cadeado",
+      "t": "Limits: what it can and can't do"
+    },
+    {
+      "icone": "check",
+      "t": "Proof: the text you see on the page"
+    },
+    {
+      "icone": "portao",
+      "t": "Stop: when to stop and call the person"
+    }
+  ],
+  "hero_alt": "Dark work desk with a checklist sheet next to a keyboard and a monitor showing a form, neutral light.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "The four parts",
+      "sub": "Tap each block. Read from bottom to top when you review.",
+      "estilo": "escada",
+      "nos": [
+        {
+          "icone": "alvo",
+          "titulo": "Goal",
+          "sub": "where and what",
+          "detalhe": "The exact page and the useful result: \"On the page http://127.0.0.1:8433/agendar.html, find the free times for Troca de pneu on 2026-11-03.\" Without the place, the agent picks one on its own."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Limits",
+          "sub": "can × can't",
+          "detalhe": "What it can do and, in so many words, what it can't: \"Do not click Agendar às… or Confirmar. Do not leave http://127.0.0.1:8433/.\" Everything outside the list is untouchable."
+        },
+        {
+          "icone": "check",
+          "titulo": "Proof",
+          "sub": "what you see",
+          "forte": true,
+          "detalhe": "A text that shows up on the page when it's done, in quotes: \"4 horários livres para Troca de pneu em 2026-11-03.\" The phrase \"done\" is not proof; a screenshot alone isn't either."
+        },
+        {
+          "icone": "x",
+          "titulo": "Stop",
+          "sub": "when to stop",
+          "detalhe": "When to stop and call the person (login, human verification, confirmation) and a budget: \"Stop after 10 actions without reaching the proof.\" Stopping with the exact reason is an expected result, not a failure."
+        }
+      ],
+      "legenda": "Without proof, the result is a promise. Without limits, the whole site is at stake. Without a stop, the agent keeps pushing until it makes things up."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Writing each part",
+      "sub": "What conferir-contrato.mjs checks for, and why.",
+      "passos": [
+        {
+          "titulo": "Goal",
+          "sub": "with a place",
+          "texto": [
+            "20 letters or more and a place: an address or a page name. \"On the shop's site\" won't do; \"on the agendar.html page\" will.",
+            "One task, one result. Two things become two contracts."
+          ]
+        },
+        {
+          "titulo": "Limits",
+          "sub": "with a \"no\"",
+          "texto": [
+            "The script requires at least one \"no\": the agent needs to know what not to do. In a site test, almost always: don't confirm, don't pay, don't leave the address.",
+            "Data limits count too: \"don't type a password\", \"don't use someone else's data\"."
+          ]
+        },
+        {
+          "titulo": "Proof",
+          "sub": "in quotes",
+          "texto": [
+            "A literal text, in quotes, that you can search for on the page. It's the same text the dry-run robot in lesson 6 will wait for.",
+            "Also ask for the evidence copied from the page: \"return the times copied from the list, not from memory\"."
+          ]
+        },
+        {
+          "titulo": "Stop",
+          "sub": "with a number",
+          "texto": [
+            "The signals (login, verification, confirmation) and a number: 10 actions, 3 attempts. The script requires a number.",
+            "Ask for a well-reported blocker: where it stopped, what's missing, and the action the person needs to take."
+          ],
+          "exemplo": {
+            "rot": "Well-reported blocker",
+            "texto": "\"I stopped at the account login screen of conta.html: it asks for email and password. Missing: the account owner's login. Nothing was sent.\" Better than \"I couldn't.\""
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "A complete contract and a vague one",
+      "sub": "The same script checks both. The part titles also work in English and Spanish (Goal, Limits, Proof, Stop; Objetivo, Límites, Prueba, Parada).",
+      "blocos": [
+        {
+          "rot": "File · kit/contratos/exemplo.md",
+          "icone": "arquivo",
+          "conteudo": "# Contrato: horários de troca de pneu\n\n## Objetivo\nNa página http://127.0.0.1:8433/agendar.html, descobrir os horários livres de \"Troca de pneu\" em 2026-11-03.\n\n## Limites\nPode preencher o formulário e clicar em \"Ver horários\". Não clique em \"Agendar às…\" nem em \"Confirmar\". Não saia de http://127.0.0.1:8433/.\n\n## Prova\nA página mostra \"4 horários livres para Troca de pneu em 2026-11-03.\" Devolva os horários copiados da lista, não de memória.\n\n## Parada\nPare e descreva a tela se aparecer login, verificação humana ou pedido de confirmação. Pare depois de 10 ações sem chegar à prova."
+        },
+        {
+          "rot": "Terminal · check the complete contract",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-contrato.mjs contratos/exemplo.md; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · check the vague contract",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-contrato.mjs contratos/vago.md; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>contrato ok: 4/4 partes (objetivo, limites, prova, parada) · contratos/exemplo.md\nsaída: 0</pre><p>All four parts are there, each with what the script checks for.</p>"
+          },
+          {
+            "rot": "Common mistake: the vague request",
+            "html": "<pre>contrato incompleto: 0/4 partes · contratos/vago.md\n  falta: objetivo sem o lugar (endereço ou página)\n  falta: limites (o que pode e o que não pode)\n  falta: prova (o que se vê na página quando acabou)\n  falta: parada (quando parar e chamar a pessoa)\nsaída: 1</pre><p>\"Schedule a service for me on the shop's website\" doesn't name the page, has no limits, no proof, and no stop. An agent with that request might click Confirmar.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "From vague to complete, and a contract for your own site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Fix the vague one",
+          "min": "10 min",
+          "texto": "Copy kit/contratos/vago.md to meu-contrato.md and rewrite it until the script accepts it. Use the conta.html page: the proof is the list of appointments, and the stop is the login screen.",
+          "pronto": "<code>node conferir-contrato.mjs meu-contrato.md</code> → <code>contrato ok: 4/4 partes</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · A task from your own site",
+          "min": "15 min",
+          "texto": "Write the contract for a real task on your site (local or staging), read-only. The proof must be text you can find on the page right now.",
+          "pronto": "<code>node conferir-contrato.mjs contrato-site.md</code> → <code>contrato ok: 4/4 partes</code>, and the proof text shows up with <code>Ctrl+F</code> on the page."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "Which of these sentences works as proof in a task contract?",
+          "opcoes": [
+            "\"The agent says it finished the task successfully\"",
+            "\"A screenshot of the whole page taken right after the click\"",
+            "\"The task takes less than a minute to run\"",
+            "\"The page shows 4 horários livres para Troca de pneu\""
+          ],
+          "certa": 3,
+          "explica": "Proof is text you can check on the page. The agent's sentence is a promise; the screenshot alone doesn't say what to check; time is not a result.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "The agent reached the login screen in the middle of the task. What does the contract say to do?",
+          "opcoes": [
+            "Stop, say where it stopped and what is missing to go on",
+            "Try the test email that's in the form",
+            "Go back to the home page and look for another path",
+            "Create a new account so it can keep going"
+          ],
+          "certa": 0,
+          "explica": "Login is a stop signal. A well-reported blocker names the screen, what is missing, and the person's action. Creating an account or trying a password breaks the limits.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "Why does conferir-contrato.mjs require a \"no\" in the limits?",
+          "opcoes": [
+            "Because a contract without a negation is harder to read",
+            "Because the agent needs to know what it must not do",
+            "Because Playwright MCP only accepts negative limits",
+            "Because the script can't read affirmative sentences"
+          ],
+          "certa": 1,
+          "explica": "Limits say what is allowed and what is not. When testing a site, the \"no\" protects whatever has consequences: confirming, paying, leaving the address.",
+          "ref": "passos"
+        },
+        {
+          "p": "The stop says \"stop if it gets stuck.\" What is missing?",
+          "opcoes": [
+            "An email address to notify when it stops",
+            "The name of the model that will run the task",
+            "A number (actions or attempts) and the stop signals",
+            "A screenshot of the page before starting"
+          ],
+          "certa": 2,
+          "explica": "\"Gets stuck\" is something the agent decides on its own. A budget (10 actions) and clear signals (login, verification, confirmation) make the stop checkable.",
+          "ref": "diagrama"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Four parts",
+          "texto": "Goal with a place, limits with a \"no\", proof in quotes, stop with a number."
+        },
+        {
+          "t": "Proof is not a sentence",
+          "texto": "It's text you look for on the page and find."
+        },
+        {
+          "t": "Stopping is a result",
+          "texto": "Stopping with the exact reason is worth more than pushing on and making things up."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: conferir-contrato.mjs and contratos/",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/tree/main/kit/contratos",
+          "icone": "arquivo"
+        },
+        {
+          "t": "LOOP-R Engineering Program: verification and evals in depth",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/en/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

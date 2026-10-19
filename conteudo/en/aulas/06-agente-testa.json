@@ -1,0 +1,271 @@
+{
+  "slug": "agente-testa",
+  "num": 6,
+  "menu": "Battery",
+  "titulo": "An agent tests your site: tasks with criteria and results saved to a file",
+  "titulo_curto": "An agent tests the site",
+  "minutos": 20,
+  "lead": "A test that only exists in the conversation with the agent disappears when the conversation ends. Here, each task becomes an entry in a battery file, with the contract from lesson 5, and each run writes a result line. The dry-run robot runs without a model; in the optional step, your agent runs the same battery and a script checks the format.",
+  "objetivo": "run a task battery against the site and write the result to a file, in the dry run and with your agent.",
+  "competencias": [
+    "escrever-bateria-de-tarefas",
+    "gravar-resultado-em-arquivo",
+    "conferir-formato-sem-depender-do-modelo"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "The battery file: contract + steps + what is expected"
+    },
+    {
+      "icone": "robo",
+      "t": "The dry-run robot: roles and names from the tree, no model"
+    },
+    {
+      "icone": "arquivo",
+      "t": "resultados/*.jsonl: one line per task"
+    },
+    {
+      "icone": "chip",
+      "t": "The same test with your agent, checked by format"
+    }
+  ],
+  "hero_alt": "Industrial humanoid robot seated in front of a dark monitor with an open form, at a test bench, neutral light.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "From the battery to the result file",
+      "sub": "Click each block.",
+      "nos": [
+        {
+          "icone": "lista",
+          "titulo": "Battery",
+          "sub": "bateria.json",
+          "detalhe": "Each task has an id, goal, limits, proof, stop, what is expected (<code>\"espera\": \"ok\"</code> or <code>\"parar\"</code>) and the dry-run steps. Task t3 expects to stop: it's the login screen."
+        },
+        {
+          "icone": "robo",
+          "titulo": "Dry run",
+          "sub": "no model",
+          "forte": true,
+          "detalhe": "The rodar-bateria.mjs follows the steps by the roles and names in the tree (getByLabel, getByRole), checks the proof and respects the stop. It's fast, free and repeatable: run it on every change to the site."
+        },
+        {
+          "icone": "cerebro",
+          "titulo": "Your agent",
+          "sub": "optional",
+          "detalhe": "Claude Code (or Codex) receives the same battery as a request, assembled by prompt-agente.mjs, and uses only Playwright MCP. It uses your subscription: run it sparingly."
+        },
+        {
+          "icone": "arquivo",
+          "titulo": "Result",
+          "sub": "one line per task",
+          "detalhe": "resultados/bateria.jsonl (dry run) and resultados/agente.jsonl (agent). The conferir-resultados.mjs checks only the format of the agent's response: one valid JSON line per task, with a status of ok, falhou or parou."
+        }
+      ],
+      "legenda": "The dry run tells you whether the site works. The agent tells you whether an agent can use the site. Both write to a file."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Reading the result",
+      "sub": "What counts as a passing test.",
+      "passos": [
+        {
+          "titulo": "Expected × obtained",
+          "sub": "✓ and ✗",
+          "texto": [
+            "A task passes when it ends the way the file expects: <code>ok</code> with the proof seen, or <code>parou</code> at the right signal. Task t3 passed by stopping at the login.",
+            "The script exits with 0 only if all tasks ended as expected. You can put it in CI."
+          ]
+        },
+        {
+          "titulo": "Agent: format only",
+          "sub": "never the text",
+          "texto": [
+            "The model's response changes with every run. The \"done when\" of the agent step checks structure: one JSON line per task and the status within three values. Lines outside the format are counted and ignored.",
+            "Comparing what the agent said with what the dry run saw is your own reading, not an automatic criterion."
+          ]
+        },
+        {
+          "titulo": "Who tests whom",
+          "sub": "course rule",
+          "texto": [
+            "The test agent only observes and reports: it doesn't fix the site in the middle of the test. If it finds a failure, the line says where, and the fix comes later, with the same test running again.",
+            "Only against the kit or a site of your own."
+          ],
+          "exemplo": {
+            "rot": "In-depth evaluation",
+            "texto": "Frozen battery, regression and agent evals belong to the LOOP-R Engineering Program (verification) and to course 5 of this program."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The kit's battery, in the dry run",
+      "sub": "Three tasks: two that finish and one that has to stop.",
+      "blocos": [
+        {
+          "rot": "File · kit/bateria.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"site\": \"kit\",\n  \"tarefas\": [\n    {\n      \"id\": \"t1-horarios\",\n      \"objetivo\": \"Na página agendar.html, ver os horários livres de Revisão completa em 2026-11-03.\",\n      \"limites\": \"Só preencher e clicar em Ver horários. Não clicar em Agendar às… nem em Confirmar.\",\n      \"prova\": { \"texto\": \"2 horários livres para Revisão completa\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [\n        { \"abrir\": \"agendar.html\" },\n        { \"preencher\": [\"Seu nome\", \"Ana\"] },\n        { \"escolher\": [\"Serviço\", \"Revisão completa\"] },\n        { \"clicar\": \"Ver horários\" }\n      ]\n    },\n    {\n      \"id\": \"t2-servicos\",\n      \"objetivo\": \"Na página inicial (index.html), achar quanto tempo leva a troca de pneu.\",\n      \"limites\": \"Só ler a página inicial. Não preencher nada.\",\n      \"prova\": { \"texto\": \"Troca de pneu: 20 minutos\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [{ \"abrir\": \"index.html\" }]\n    },\n    {\n      \"id\": \"t3-minha-conta\",\n      \"objetivo\": \"Na página conta.html, ver os meus agendamentos.\",\n      \"limites\": \"Não digitar e-mail nem senha. Não criar conta.\",\n      \"prova\": { \"texto\": \"Seus agendamentos\" },\n      \"parada\": \"Pare na tela de login e diga o que falta. Pare depois de 10 ações.\",\n      \"espera\": \"parar\",\n      \"passos\": [{ \"abrir\": \"conta.html\" }]\n    }\n  ]\n}"
+        },
+        {
+          "rot": "Terminal · run the battery",
+          "icone": "robo",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs bateria.json; echo \"saída: $?\"\nhead -n 1 resultados/bateria.jsonl"
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: bateria.json · site: http://127.0.0.1:PORTA/ · espera: 3000 ms\n✓ t1-horarios        ok      viu \"2 horários livres para Revisão completa\"\n✓ t2-servicos        ok      viu \"Troca de pneu: 20 minutos\"\n✓ t3-minha-conta     parou   login exigido (depois de \"abrir\")\n3 tarefas · 3 como esperado (ok 2 · parou 1 · falhou 0) · resultados/bateria.jsonl\nsaída: 0\n{\"id\":\"t1-horarios\",\"esperado\":\"ok\",\"status\":\"ok\",\"motivo\":\"viu \\\"2 horários livres para Revisão completa\\\"\",\"ms\":2156}</pre><p>Three ✓: t1 and t2 saw the proof; t3 stopped at the login, just as the file expects. The last line is the first entry in <code>resultados/bateria.jsonl</code>.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The same battery with your agent (optional)",
+      "sub": "One claude -p with the kit's Playwright MCP and only the browser tools allowed. It uses your subscription; run it once.",
+      "blocos": [
+        {
+          "rot": "Terminal · your agent runs the battery",
+          "icone": "chip",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nmkdir -p resultados; node servir.mjs & SRV=$!; sleep 1\nnode configurar.mjs > /dev/null\nclaude -p \"$(node prompt-agente.mjs bateria.json)\" --mcp-config .mcp.json --strict-mcp-config \\\n  --allowedTools \"mcp__playwright__browser_navigate mcp__playwright__browser_snapshot mcp__playwright__browser_type mcp__playwright__browser_select_option mcp__playwright__browser_click mcp__playwright__browser_wait_for\" \\\n  > resultados/agente.jsonl; echo \"claude: saída $?\"\nkill $SRV\nnode conferir-resultados.mjs resultados/agente.jsonl bateria.json; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>site do kit em http://127.0.0.1:8433/ (Ctrl+C para parar)\nclaude: saída 0\n  t1-horarios        ok\n  t2-servicos        ok\n  t3-minha-conta     parou\nlinhas JSON válidas: 3 de 3 tarefas · linhas ignoradas: 0\nsaída: 0</pre><p>Three valid JSON lines, one per task. That is all the criterion checks.</p>"
+          },
+          {
+            "rot": "The agent's file (10/19/2026)",
+            "html": "<pre>{\"id\": \"t1-horarios\", \"status\": \"ok\", \"evidencia\": \"2 horários livres para Revisão completa em 2026-11-03.\"}\n{\"id\": \"t2-servicos\", \"status\": \"ok\", \"evidencia\": \"Troca de pneu: 20 minutos\"}\n{\"id\": \"t3-minha-conta\", \"status\": \"parou\", \"evidencia\": \"Tela de login: \\\"Entre para ver os seus agendamentos.\\\" com campos E-mail e Senha e botão Entrar; falta login (e-mail e senha do dono da conta)\"}</pre><p>In this run, the agent reached the same three statuses as the dry run and described the t3 blocker. Another run may word it differently; that is why the criterion is the format.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The dry run always; the agent once.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · The battery as a dry run",
+          "min": "10 min",
+          "texto": "Run the battery. Then change the t2 proof to \"Troca de pneu: 30 minutos\" in a copy (bateria-erro.json) and run the copy.",
+          "pronto": "<code>node rodar-bateria.mjs bateria.json</code> → <code>3 tarefas · 3 como esperado</code> and <code>saída: 0</code>; the copy → <code>✗ t2-servicos falhou</code> and <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Your agent (optional)",
+          "min": "15 min",
+          "texto": "With Claude Code installed, run the agent block once. In Codex, build the request with node prompt-agente.mjs bateria.json and run it with the servers from config.toml.",
+          "pronto": "<code>node conferir-resultados.mjs resultados/agente.jsonl bateria.json</code> → <code>linhas JSON válidas: 3 de 3 tarefas</code> and <code>saída: 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "Task t3 ended with status parou. Did the battery pass?",
+          "opcoes": [
+            "No: any stop is a failure of the site",
+            "Yes, because the file expects t3 to stop at the login",
+            "Only if the agent tried to log in first",
+            "No, because the proof \"Seus agendamentos\" did not appear"
+          ],
+          "certa": 1,
+          "explica": "Each task declares what is expected. In t3, \"espera\": \"parar\": stopping at the login is the right result.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "What does the \"done when\" of the step with your agent check?",
+          "opcoes": [
+            "One valid JSON line per task, with a known status",
+            "That the agent's text is identical, word for word, to the dry run's",
+            "That the agent uses fewer than 10 actions per task",
+            "That the model explains each click in its answer"
+          ],
+          "certa": 0,
+          "explica": "The model's text changes on every run. The criterion is structural: format and status within ok, falhou or parou.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "Why is the dry run without a model still useful when you have a real agent?",
+          "opcoes": [
+            "Because the real agent only works after the dry run",
+            "Because the dry run uses coordinates and the agent uses refs",
+            "Because it is free and repeatable: it runs on every change",
+            "Because the dry run also tests the model you use"
+          ],
+          "certa": 2,
+          "explica": "The dry run tells you whether the site works, fast and at no cost. The agent tells you whether an agent can use the site, and it costs subscription usage.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "In the middle of the test, the agent found a bug on the site. What should it do?",
+          "opcoes": [
+            "Fix the HTML and move on to the next task",
+            "Try again until the proof shows up on the page",
+            "Skip the task without writing a line to the result",
+            "Record where it failed and move on without touching the site"
+          ],
+          "certa": 3,
+          "explica": "The test observes and reports. The fix comes later, and the same test runs again to prove it worked.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Tests in a file",
+          "texto": "A battery with a contract and results in .jsonl outlive the conversation."
+        },
+        {
+          "t": "Always the dry run",
+          "texto": "The robot with no model runs on every change, for free."
+        },
+        {
+          "t": "The agent by format",
+          "texto": "The step with an agent checks structure, never the model's text."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: rodar-bateria.mjs and bateria.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/rodar-bateria.mjs",
+          "icone": "arquivo"
+        },
+        {
+          "t": "LOOP-R Engineering Program: verification and evals",
+          "href": "https://inematds.github.io/loop-r-eng-verificacao-v72/en/",
+          "icone": "seta"
+        },
+        {
+          "t": "Claude Code: non-interactive mode (claude -p)",
+          "href": "https://docs.claude.com/en/docs/claude-code/cli-reference",
+          "icone": "terminal"
+        }
+      ]
+    }
+  ]
+}

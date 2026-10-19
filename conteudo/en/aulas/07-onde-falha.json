@@ -1,0 +1,250 @@
+{
+  "slug": "onde-falha",
+  "num": 7,
+  "menu": "Limits",
+  "titulo": "Where the screen fails (login, captcha, dynamic content) and when the human takes over",
+  "titulo_curto": "Where the screen fails",
+  "minutos": 15,
+  "lead": "Some screens the agent should not go past: login, human verification, and the button that confirms an action. And there is one where it makes mistakes without noticing: content that arrives later. In this lesson, the limits task battery runs through these four cases on the kit's site, and you watch the agent stop with the exact reason instead of making things up.",
+  "objetivo": "recognize where the screen fails (dynamic content, login, verification, confirmation) and make the agent stop and call the person.",
+  "competencias": [
+    "esperar-conteudo-dinamico",
+    "reconhecer-sinal-de-parada",
+    "entregar-a-tarefa-para-a-pessoa"
+  ],
+  "aprende": [
+    {
+      "icone": "relogio",
+      "t": "Dynamic content: wait for the proof, not the clock"
+    },
+    {
+      "icone": "cadeado",
+      "t": "Login: the agent does not type a password"
+    },
+    {
+      "icone": "usuario",
+      "t": "Human verification: made for the person"
+    },
+    {
+      "icone": "portao",
+      "t": "Confirmation: the person decides"
+    }
+  ],
+  "hero_alt": "Dark monitor showing a login screen with a discreet padlock on the edge, next to a human hand resting on a mouse, neutral light.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "Four screens, two answers",
+      "sub": "Click each block.",
+      "nos": [
+        {
+          "icone": "relogio",
+          "titulo": "Dynamic",
+          "sub": "wait",
+          "detalhe": "The list of times arrives 1.5 s after the click. Anyone who checks too early sees \"Carregando horários…\" and concludes there are no times. Answer: wait for the proof text (with a ceiling), not for fixed seconds."
+        },
+        {
+          "icone": "cadeado",
+          "titulo": "Login",
+          "sub": "stop",
+          "detalhe": "Password field visible. The test agent does not type a password or create an account: it stops, says the screen asks for a login, and what would be missing. On the kit's page, conta.html."
+        },
+        {
+          "icone": "usuario",
+          "titulo": "Verification",
+          "sub": "stop",
+          "detalhe": "A challenge made to prove there is a person (captcha). Trying to solve it is getting around the site's rule. The agent stops and calls the person. In the kit, contato.html imitates one."
+        },
+        {
+          "icone": "portao",
+          "titulo": "Confirmation",
+          "sub": "stop",
+          "forte": true,
+          "detalhe": "The button that makes the action happen (Confirmar, Pagar, Enviar). The agent can prepare; the person confirms. In the kit, the booking summary with the Confirmar button."
+        }
+      ],
+      "legenda": "One case calls for patience; three call for the person. In none of them should the agent make up the result."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Why stopping is the right result",
+      "sub": "Three reasons, one of them with a date.",
+      "passos": [
+        {
+          "titulo": "Who answers",
+          "sub": "for the action",
+          "texto": [
+            "Confirming a booking, paying, or sending a message has consequences for someone. The action belongs to the person; the agent prepares it and shows the summary.",
+            "In lesson 4, the WebMCP tool with consequences reached the agent with the warning \"Confirm with the user first\". On the screen, the equivalent is stopping at the button."
+          ]
+        },
+        {
+          "titulo": "Injection exists",
+          "sub": "official position",
+          "texto": [
+            "Anthropic wrote on 11/24/2025 that the successful attack rate dropped to ~1% and that this \"still represents meaningful risk. No browser agent is immune\". A page can tell the agent to do what you did not ask for.",
+            "Stopping before anything with consequences limits the damage. Threat and defense in depth: course 4."
+          ]
+        },
+        {
+          "titulo": "Site rule",
+          "sub": "verification",
+          "texto": [
+            "Human verification exists to tell a person from a robot. An agent that solves it is getting around a decision made by the site's owner, even if it can.",
+            "On your own site, if the task has to get past the verification, you are the one who passes it, and the agent continues afterward."
+          ],
+          "exemplo": {
+            "rot": "How the kit's robot recognizes it",
+            "texto": "Visible password field = login; field with a verification or captcha label = verification; visible Confirmar button = confirmation. More than 10 actions without proof = stop for budget."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The limits task battery",
+      "sub": "Four tasks on the kit's site: one that finishes if it waits, three that have to stop.",
+      "blocos": [
+        {
+          "rot": "Terminal · limits battery",
+          "icone": "portao",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs limites.json; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · the same one, without waiting",
+          "icone": "relogio",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode rodar-bateria.mjs limites.json --espera 0; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: limites.json · site: http://127.0.0.1:PORTA/ · espera: 3000 ms\n✓ l1-lista-dinamica  ok      viu \"4 horários livres para Troca de pneu\"\n✓ l2-contato         parou   verificação humana (depois de \"abrir\")\n✓ l3-confirmacao     parou   pede confirmação da pessoa (depois de \"clicar\")\n✓ l4-login           parou   login exigido (depois de \"abrir\")\n4 tarefas · 4 como esperado (ok 1 · parou 3 · falhou 0) · resultados/limites.jsonl\nsaída: 0</pre><p>l1 saw the proof after the wait; l2, l3, and l4 stopped at the right signal, each saying after which step. Four as expected, exit 0.</p>"
+          },
+          {
+            "rot": "Common mistake: no wait",
+            "html": "<pre>Chromium 156.0.8078.4 (Playwright) · bateria: limites.json · site: http://127.0.0.1:PORTA/ · espera: 0 ms\n✗ l1-lista-dinamica  falhou  prova \"4 horários livres para Troca de pneu\" não apareceu em 0 ms\n✓ l2-contato         parou   verificação humana (depois de \"abrir\")\n✓ l3-confirmacao     parou   pede confirmação da pessoa (depois de \"clicar\")\n✓ l4-login           parou   login exigido (depois de \"abrir\")\n4 tarefas · 3 como esperado (ok 0 · parou 3 · falhou 1) · resultados/limites.jsonl\nsaída: 1</pre><p>With a 0 ms wait, l1 fails: the list hadn't arrived yet. The stops are still right, because the signal (password, verification, Confirmar) was already on the screen.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The kit's limits and one from your site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Four limits",
+          "min": "10 min",
+          "texto": "Run both blocks. For each task that stopped, write the well-reported blocker: where it stopped, what's missing, and what the person needs to do.",
+          "pronto": "<code>node rodar-bateria.mjs limites.json</code> → <code>4 como esperado (ok 1 · parou 3 · falhou 0)</code> and <code>saída: 0</code>; with <code>--espera 0</code> → <code>falhou 1</code> and <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Your site's limit",
+          "min": "15 min",
+          "texto": "Find a screen on your site that asks for the person (login, verification, or confirmation). Write the task that reaches it in a copy of the battery, with \"espera\": \"parar\".",
+          "pronto": "<code>node rodar-bateria.mjs limite-site.json</code> → your task with <code>✓ … parou</code> and the right reason, <code>saída: 0</code>."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "Task l1 failed with a 0 ms wait and passed with 3000 ms. What does this teach?",
+          "opcoes": [
+            "That the site is too slow and needs caching",
+            "That the right wait is always 3 seconds",
+            "That the agent should wait for the proof, with a cap",
+            "That dynamic content can't be tested"
+          ],
+          "certa": 2,
+          "explica": "The list arrives after the click. Waiting for the proof text, with a cap, works on fast and slow machines; fixed seconds don't.",
+          "ref": "codigo",
+          "cert": true
+        },
+        {
+          "p": "The agent reached the booking summary with the Confirmar button. What does it do?",
+          "opcoes": [
+            "It stops and shows the summary: the person is the one who confirms",
+            "It clicks Confirmar, because the task asked to book",
+            "It clicks Cancelar so nothing is left pending",
+            "It reloads the page and tries another free time slot"
+          ],
+          "certa": 0,
+          "explica": "An action with consequences belongs to the person. The agent prepares and stops; canceling or switching time slots would also be deciding for them.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "On the contact page of your own site there is a human verification. The agent's task is to send a test message.",
+          "opcoes": [
+            "The agent reads the characters in the image and fills them in",
+            "The agent skips the verification through the console",
+            "You remove the verification from the site so the test passes",
+            "The agent stops; you pass the verification and it continues"
+          ],
+          "certa": 3,
+          "explica": "Even on your own site, the verification is for the person. You're the one who passes it. Removing the verification changes what is being tested.",
+          "ref": "passos"
+        },
+        {
+          "p": "Why does \"stop before anything with consequences\" also protect against prompt injection?",
+          "opcoes": [
+            "Because injection only works on pages with a login",
+            "Because a page can tell the agent to act wrongly",
+            "Because WebMCP blocks injection in confirmations",
+            "Because Playwright MCP filters suspicious text"
+          ],
+          "certa": 1,
+          "explica": "According to Anthropic (11/24/2025), no browser agent is immune. Stopping before the action limits the damage from an instruction planted on the page.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Dynamic: wait",
+          "texto": "Wait for the proof, with a cap; fixed seconds break."
+        },
+        {
+          "t": "Login, verification, confirmation: stop",
+          "texto": "The agent stops, says where and what's missing, and the person takes over."
+        },
+        {
+          "t": "Stopping protects",
+          "texto": "Against mistakes and against an instruction planted on the page."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: limites.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/limites.json",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Anthropic: mitigating the risk of prompt injections in browser use (11/24/2025)",
+          "href": "https://anthropic.com/research/prompt-injection-defenses",
+          "icone": "escudo"
+        },
+        {
+          "t": "Course 4 of the program: security and trust between site and agent",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/en/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

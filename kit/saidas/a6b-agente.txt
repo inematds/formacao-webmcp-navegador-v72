@@ -1,0 +1,7 @@
+site do kit em http://127.0.0.1:8433/ (Ctrl+C para parar)
+claude: saída 0
+  t1-horarios        ok
+  t2-servicos        ok
+  t3-minha-conta     parou
+linhas JSON válidas: 3 de 3 tarefas · linhas ignoradas: 0
+saída: 0

@@ -1,0 +1,11 @@
+body { font: 16px/1.5 system-ui, sans-serif; margin: 0; background: #f6f6f4; color: #16161a; }
+header { background: #0c0c10; color: #f6f6f4; padding: 12px 20px; }
+header a { color: #f6f6f4; }
+.marca { font-weight: 700; margin: 0 0 4px; }
+main { max-width: 640px; margin: 0 auto; padding: 20px; }
+label { display: block; margin-top: 12px; font-weight: 600; }
+input, select, button { font: inherit; padding: 6px 8px; }
+button { margin-top: 14px; background: #0c0c10; color: #fff; border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+#horarios li { margin: 4px 0; }
+.aviso { background: #fff3c4; padding: 8px 12px; border-radius: 6px; }
+.desafio { font-family: monospace; letter-spacing: 6px; background: repeating-linear-gradient(45deg,#ccc,#ccc 4px,#eee 4px,#eee 8px); padding: 10px; display: inline-block; }

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitrine · Oficina Pedal Livre</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<main>
+  <h1>Vitrine com widget de frete</h1>
+  <p>O quadro abaixo vem de outra origem. Use ?widget=URL&amp;allow=0 para tirar a permissão "tools".</p>
+  <div id="quadro"></div>
+</main>
+<script type="module">
+// Página da origem A que embute um iframe da origem B (aula 4). Rascunho WebMCP de 16/10/2026, experimental.
+const q = new URLSearchParams(location.search);
+const f = document.createElement('iframe');
+if (q.get('allow') !== '0') f.allow = 'tools';            // permissions policy "tools": sem ela, o iframe não usa a API
+f.src = `${q.get('widget')}?topo=${encodeURIComponent(location.origin)}`;
+f.title = 'Widget de frete';
+document.getElementById('quadro').append(f);
+if ('modelContext' in document) {
+  await document.modelContext.registerTool({ name: 'consultar_vitrine', description: 'Lista os produtos da vitrine. Só lê.',
+    inputSchema: { type: 'object', properties: {} }, annotations: { readOnlyHint: true }, execute: async () => ({ produtos: ['câmara de ar', 'pneu 29'] }) });
+}
+</script>
+</body>
+</html>

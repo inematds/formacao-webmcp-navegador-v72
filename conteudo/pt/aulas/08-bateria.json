@@ -1,0 +1,324 @@
+{
+  "slug": "bateria",
+  "num": 8,
+  "menu": "Sua bateria",
+  "titulo": "A bateria de tarefas do seu site (mapa + gerador)",
+  "titulo_curto": "A bateria do seu site",
+  "minutos": 20,
+  "lead": "Hora de juntar: as tarefas que importam no seu site, cada uma com contrato, passos e o que se espera, numa bateria que o robô de ensaio roda a cada mudança e que o seu agente pode rodar quando você quiser. O conferir-bateria.mjs diz se ela está pronta; o mapa e o gerador organizam o que falta.",
+  "objetivo": "montar a bateria de tarefas do seu site e conferir que cada tarefa tem contrato, prova e parada.",
+  "competencias": [
+    "montar-bateria-do-proprio-site",
+    "incluir-tarefa-de-parada",
+    "planejar-a-rodada-de-testes"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "O modelo de bateria e o que o conferidor cobra"
+    },
+    {
+      "icone": "portao",
+      "t": "Pelo menos uma tarefa que tem de parar"
+    },
+    {
+      "icone": "robo",
+      "t": "Rodar contra o seu site local"
+    },
+    {
+      "icone": "calendario",
+      "t": "O plano com datas"
+    }
+  ],
+  "hero_alt": "Bancada de testes com um monitor escuro mostrando uma lista de tarefas marcadas e um robô industrial ao fundo, luz neutra.",
+  "secoes": [
+    {
+      "tipo": "mapa",
+      "titulo": "O mapa do curso",
+      "sub": "Quatro degraus, os exercícios de cada um e o que cada degrau entrega. Clique num exercício para ver o \"pronto quando\".",
+      "degraus": [
+        {
+          "aula": "playwright-mcp",
+          "icone": "lupa",
+          "quando": "Dia 1",
+          "titulo": "Ver",
+          "sub": "aulas 1 a 3",
+          "saida": "O kit pronto, o snapshot do seu site e os erros de console e rede.",
+          "passo": "Mapa dos agentes, Playwright MCP e DevTools MCP contra o kit e contra o seu site."
+        },
+        {
+          "aula": "consumir-webmcp",
+          "icone": "chip",
+          "quando": "Dia 2",
+          "titulo": "Consumir",
+          "sub": "aula 4",
+          "saida": "O agente com e sem a API, e o teste de origens anotado.",
+          "passo": "Requer o degrau 1. Descoberta, anotações, fallback e iframes, com selo experimental."
+        },
+        {
+          "aula": "contrato",
+          "icone": "alvo",
+          "quando": "Dia 3",
+          "titulo": "Contratar",
+          "sub": "aula 5",
+          "saida": "Dois contratos completos, um deles do seu site.",
+          "passo": "Objetivo, limites, prova e parada, conferidos pelo script."
+        },
+        {
+          "aula": "onde-falha",
+          "icone": "portao",
+          "quando": "Dia 4",
+          "titulo": "Testar",
+          "sub": "aulas 6 a 8",
+          "saida": "A bateria do seu site rodando, com resultado em arquivo.",
+          "passo": "Bateria no ensaio, o seu agente uma vez, os limites e a bateria do seu site."
+        }
+      ],
+      "resultado": {
+        "titulo": "Ao final do curso",
+        "texto": "Uma bateria de tarefas do seu site que roda a cada mudança e grava o resultado, com as paradas no lugar certo.",
+        "total": "10 exercícios"
+      },
+      "rolagem_fim": {
+        "titulo": "O curso inteiro",
+        "texto": "Ver, consumir, contratar e testar. Cada degrau tem exercícios com saída esperada; a bateria junta tudo."
+      },
+      "legenda": "Ordem sugerida: cada degrau usa o kit ou o contrato do anterior."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Do modelo à sua bateria",
+      "sub": "Quatro decisões.",
+      "passos": [
+        {
+          "titulo": "Quais tarefas",
+          "sub": "3 a 6",
+          "texto": [
+            "As que dão dinheiro ou dor de cabeça: achar um preço, ver horários, chegar ao contato. Comece só de leitura.",
+            "Cada tarefa, um contrato: objetivo com a página, limites com um \"não\", prova entre aspas, parada com número."
+          ]
+        },
+        {
+          "titulo": "Os passos",
+          "sub": "pelo nome",
+          "texto": [
+            "O robô entende quatro passos: <code>abrir</code>, <code>preencher</code> [rótulo, valor], <code>escolher</code> [rótulo, opção] e <code>clicar</code> [texto do botão ou link]. Todos pelo nome da árvore.",
+            "Se um passo não acha o controle pelo nome, o problema costuma ser o HTML (curso 0, aula 3), não a bateria."
+          ]
+        },
+        {
+          "titulo": "Uma parada",
+          "sub": "obrigatória",
+          "texto": [
+            "Pelo menos uma tarefa com <code>\"espera\": \"parar\"</code>: o login, a verificação ou a confirmação do seu site. Ela prova que o teste para onde deve.",
+            "O conferidor recusa bateria sem parada."
+          ]
+        },
+        {
+          "titulo": "Onde roda",
+          "sub": "local",
+          "texto": [
+            "No seu site local (em <code>127.0.0.1</code>, na porta do seu projeto) ou de homologação. O conferidor avisa quando o endereço não é local.",
+            "Nada de produção com dado real, compra ou envio."
+          ],
+          "exemplo": {
+            "rot": "Quando a spec mudar",
+            "texto": "Bateria congelada e regressão quando o WebMCP mudar de novo são do curso 5. A sua bateria é o ponto de partida."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "O conferidor da bateria",
+      "sub": "O modelo do kit ainda não passa (uma tarefa, nenhuma parada); a bateria de limites passa.",
+      "blocos": [
+        {
+          "rot": "Arquivo · kit/modelo-bateria.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"site\": \"http://127.0.0.1:8000/\",\n  \"tarefas\": [\n    {\n      \"id\": \"t1-trocar\",\n      \"objetivo\": \"Na página [página].html, trocar por: o que a pessoa quer conseguir nesta página.\",\n      \"limites\": \"Trocar por: o que o agente pode fazer. Não clicar em Comprar nem em Confirmar.\",\n      \"prova\": { \"texto\": \"trocar pelo texto que aparece quando deu certo\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [\n        { \"abrir\": \"index.html\" },\n        { \"preencher\": [\"Rótulo do campo\", \"valor\"] },\n        { \"clicar\": \"Texto do botão\" }\n      ]\n    }\n  ]\n}"
+        },
+        {
+          "rot": "Terminal · copiar o modelo e conferir",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\ncp modelo-bateria.json minha-bateria.json\nnode conferir-bateria.mjs minha-bateria.json; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · conferir uma bateria pronta",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-bateria.mjs limites.json; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "O modelo, antes (19/10/2026)",
+            "html": "<pre>  só 1 tarefas (mínimo 3)\n  nenhuma tarefa com espera \"parar\" (inclua login, verificação ou confirmação)\nbateria com 2 problemas · minha-bateria.json\nsaída: 1</pre><p>Duas faltas: só uma tarefa e nenhuma parada. É o ponto de partida do E1.</p>"
+          },
+          {
+            "rot": "Uma bateria pronta (19/10/2026)",
+            "html": "<pre>bateria ok: 4 tarefas · 4 partes em todas · 3 com parada esperada · limites.json\nsaída: 0</pre><p>A bateria de limites da aula 7 passa: quatro tarefas, as quatro partes em todas, três paradas esperadas.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "A sua bateria, conferida e rodando.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Montar a bateria",
+          "min": "30 min",
+          "texto": "Complete minha-bateria.json com 3 a 6 tarefas do seu site, uma delas com \"espera\": \"parar\". Troque o site pelo endereço local do seu projeto.",
+          "pronto": "<code>node conferir-bateria.mjs minha-bateria.json</code> → <code>bateria ok: N tarefas · 4 partes em todas · P com parada esperada</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Rodar contra o seu site",
+          "min": "15 min",
+          "texto": "Com o seu site no ar localmente, rode a bateria. Cada ✗ vira uma linha no seu plano: é bug do site, do HTML ou da bateria?",
+          "pronto": "<code>node rodar-bateria.mjs minha-bateria.json</code> → <code>N tarefas · N como esperado</code> e <code>saída: 0</code>, com <code>resultados/minha-bateria.jsonl</code> gravado."
+        }
+      ]
+    },
+    {
+      "tipo": "gerador",
+      "titulo": "Gere o seu plano com datas",
+      "sub": "Escolha a data de início e quanto tempo você tem por semana.",
+      "curso": "Agentes de navegador: testar o site como o agente vê",
+      "horas_padrao": 3,
+      "degraus": [
+        {
+          "titulo": "Aula 1 · O mapa dos agentes",
+          "aula": "mapa"
+        },
+        {
+          "titulo": "Aula 2 · Playwright MCP",
+          "aula": "playwright-mcp"
+        },
+        {
+          "titulo": "Aula 3 · Chrome DevTools MCP",
+          "aula": "devtools-mcp"
+        },
+        {
+          "titulo": "Aula 4 · O agente e o WebMCP",
+          "aula": "consumir-webmcp"
+        },
+        {
+          "titulo": "Aula 5 · O contrato da tarefa",
+          "aula": "contrato"
+        },
+        {
+          "titulo": "Aula 6 · Um agente testa o site",
+          "aula": "agente-testa"
+        },
+        {
+          "titulo": "Aula 7 · Onde a tela falha",
+          "aula": "onde-falha"
+        },
+        {
+          "titulo": "Aula 8 · A bateria do seu site",
+          "aula": "bateria"
+        }
+      ],
+      "txt": {
+        "titulo": "Plano — Agentes de navegador: testar o site como o agente vê",
+        "inicio": "Início",
+        "ritmo": "Ritmo",
+        "termino": "Término previsto",
+        "ate": "até",
+        "pronto": "pronto quando",
+        "semanas": "semanas",
+        "travou": "## O que travou e o que decidi",
+        "h": "h por semana",
+        "exs": "exercícios"
+      }
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "O conferidor recusou a sua bateria com \"nenhuma tarefa com espera parar\". Por que ele exige isso?",
+          "opcoes": [
+            "Porque o robô de ensaio só roda com uma parada",
+            "Porque tarefa de leitura sempre acaba em parada",
+            "Para provar que o teste para onde deve parar",
+            "Porque o Playwright MCP precisa de uma parada"
+          ],
+          "certa": 2,
+          "explica": "Uma bateria sem parada nunca testa se o agente respeita login, verificação e confirmação, que são os pontos em que errar custa caro.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "Um passo preencher [\"E-mail\", …] falhou porque o robô não achou o campo pelo rótulo. Onde está o problema mais provável?",
+          "opcoes": [
+            "No HTML: o campo não tem rótulo que vire nome",
+            "No robô de ensaio, que não lê campos de e-mail",
+            "No Chromium do kit, que é velho demais",
+            "Na bateria, que devia usar o id do campo"
+          ],
+          "certa": 0,
+          "explica": "O robô acha pelo nome da árvore, como o agente. Campo sem label não tem nome confiável: a correção é no HTML (curso 0, aula 3).",
+          "ref": "passos"
+        },
+        {
+          "p": "Onde a sua bateria deve rodar?",
+          "opcoes": [
+            "Em produção, porque é lá que o cliente navega",
+            "Em qualquer site parecido com o seu",
+            "No site de um concorrente, para comparar",
+            "No seu site local ou de homologação"
+          ],
+          "certa": 3,
+          "explica": "Agente de teste só contra o seu site, local ou homologação. Produção tem dado real; site de terceiro não é seu para automatizar.",
+          "ref": "passos",
+          "cert": true
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Bateria do seu site",
+          "texto": "3 a 6 tarefas, cada uma com contrato, passos e o que se espera."
+        },
+        {
+          "t": "Uma parada, pelo menos",
+          "texto": "Prova que o teste para no login, na verificação ou na confirmação."
+        },
+        {
+          "t": "Roda sempre",
+          "texto": "O robô de ensaio a cada mudança; o seu agente quando você quiser, conferido pelo formato."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Kit do curso: conferir-bateria.mjs e modelo-bateria.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/tree/main/kit",
+          "icone": "pasta"
+        },
+        {
+          "t": "Próximo curso da formação: 4 · Segurança e confiança entre site e agente",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/",
+          "icone": "seta"
+        },
+        {
+          "t": "Área WebMCP: a formação inteira",
+          "href": "https://eventos.inema.pro/webmcp/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

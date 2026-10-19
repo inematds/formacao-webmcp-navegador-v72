@@ -1,0 +1,4 @@
+  só 1 tarefas (mínimo 3)
+  nenhuma tarefa com espera "parar" (inclua login, verificação ou confirmação)
+bateria com 2 problemas · minha-bateria.json
+saída: 1

@@ -1,0 +1,3 @@
+{"id": "t1-horarios", "status": "ok", "evidencia": "2 horários livres para Revisão completa em 2026-11-03."}
+{"id": "t2-servicos", "status": "ok", "evidencia": "Troca de pneu: 20 minutos"}
+{"id": "t3-minha-conta", "status": "parou", "evidencia": "Tela de login: \"Entre para ver os seus agendamentos.\" com campos E-mail e Senha e botão Entrar; falta login (e-mail e senha do dono da conta)"}

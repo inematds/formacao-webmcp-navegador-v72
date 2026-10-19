@@ -1,0 +1,2 @@
+bateria ok: 4 tarefas · 4 partes em todas · 3 com parada esperada · limites.json
+saída: 0

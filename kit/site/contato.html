@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contato · Oficina Pedal Livre</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header>
+  <p class="marca">Oficina Pedal Livre</p>
+  <nav aria-label="Principal">
+    <a href="index.html">Início</a> · <a href="agendar.html">Agendar</a> · <a href="conta.html">Minha conta</a> · <a href="contato.html">Contato</a>
+  </nav>
+</header>
+<main>
+  <h1>Contato</h1>
+  <form>
+    <label for="msg">Mensagem</label>
+    <textarea id="msg" rows="3" cols="40"></textarea>
+    <p>Verificação: digite os caracteres abaixo.</p>
+    <p class="desafio" aria-hidden="true">k7 Qx 2m</p>
+    <label for="cod">Caracteres da verificação</label>
+    <input id="cod" autocomplete="off">
+    <button type="button">Enviar mensagem</button>
+  </form>
+  <!-- Desafio de exemplo (imita um captcha). Agente não resolve verificação humana: para e chama a pessoa (aula 7). -->
+</main>
+</body>
+</html>

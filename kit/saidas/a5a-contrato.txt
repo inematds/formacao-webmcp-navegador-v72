@@ -1,0 +1,2 @@
+contrato ok: 4/4 partes (objetivo, limites, prova, parada) · contratos/exemplo.md
+saída: 0

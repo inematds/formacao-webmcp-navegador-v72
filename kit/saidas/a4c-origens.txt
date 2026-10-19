@@ -1,0 +1,6 @@
+Chromium 156.0.8078.4 (Playwright) · modo: nativo · spec de 16/10/2026
+1. vitrine (origem A) · getTools(): consultar_vitrine
+2. widget (origem B, allow="tools") · registro: registrou 2 · getTools(): widget_exposto, widget_privado
+3. widget sem allow="tools" · registro: NotAllowedError: Access to the feature "tools" is disallowed by permissions policy.
+4. Playwright MCP 0.0.83 (agente de automação, todos os frames) · vê: webmcp_consultar_vitrine, webmcp_widget_exposto, webmcp_widget_privado
+saída: 0

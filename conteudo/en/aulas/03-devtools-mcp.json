@@ -1,0 +1,257 @@
+{
+  "slug": "devtools-mcp",
+  "num": 3,
+  "menu": "DevTools",
+  "titulo": "Chrome DevTools MCP: see what the agent did (console, network)",
+  "titulo_curto": "Chrome DevTools MCP",
+  "minutos": 15,
+  "lead": "When the agent says \"I couldn't do it,\" the answer is usually in the console or the network: a file that returned 404, a JavaScript error. Chrome DevTools MCP gives the agent the same tabs you open with F12. In this lesson you list the console and the network of the kit page, find the planted error, and bring it to zero.",
+  "objetivo": "use Chrome DevTools MCP to see the console and network of the page the agent opened, find the error, and bring it to zero in a fixed copy.",
+  "competencias": [
+    "ler-console-e-rede-pelo-agente",
+    "achar-requisicao-com-falha",
+    "desligar-telemetria-do-servidor"
+  ],
+  "aprende": [
+    {
+      "icone": "lupa",
+      "t": "list_console_messages and list_network_requests"
+    },
+    {
+      "icone": "x",
+      "t": "The planted error: a promocoes.json that returns 404"
+    },
+    {
+      "icone": "escudo",
+      "t": "Telemetry is on by default, and how to turn it off"
+    },
+    {
+      "icone": "chip",
+      "t": "pageId, sandbox, and the other gotchas in 1.10.1"
+    }
+  ],
+  "hero_alt": "Dark monitor with the developer tools panel open, network and console rows, neutral light.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "The agent's F12",
+      "sub": "Click each block.",
+      "nos": [
+        {
+          "icone": "robo",
+          "titulo": "Agent",
+          "sub": "asks",
+          "detalhe": "Claude Code or Codex calls tools on the server. In the dry run, devtools.mjs makes the calls."
+        },
+        {
+          "icone": "chip",
+          "titulo": "DevTools MCP",
+          "sub": "1.10.1",
+          "forte": true,
+          "detalhe": "Google's server opens a Chrome (in the kit, Playwright's Chromium) and talks to it through the DevTools protocol. It exposes 30 tools by default: navigate, click, console, network, performance, Lighthouse, memory."
+        },
+        {
+          "icone": "terminal",
+          "titulo": "Console",
+          "sub": "errors and warnings",
+          "detalhe": "list_console_messages returns each message with its level: <code>[error] promoções: falha ao carregar promocoes.json (HTTP 404)</code>."
+        },
+        {
+          "icone": "nuvem",
+          "titulo": "Network",
+          "sub": "every request",
+          "detalhe": "list_network_requests returns method, URL, and status: <code>GET …/promocoes.json [404]</code>. The page shows \"Sem promoções no momento\" and looks normal; only the network tells the truth."
+        }
+      ],
+      "legenda": "The page looks right. The console and the network show that a file is missing."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Playwright MCP or DevTools MCP?",
+      "sub": "One acts, the other investigates.",
+      "passos": [
+        {
+          "titulo": "To act",
+          "sub": "Playwright MCP",
+          "texto": [
+            "Fill in, click, and wait using the accessibility tree, with refs. Playwright MCP also lists console and network (<code>browser_console_messages</code>, <code>browser_network_requests</code>), but its strength is the task.",
+            "In lesson 2 it already warned: \"Console: 1 errors\"."
+          ]
+        },
+        {
+          "titulo": "To investigate",
+          "sub": "DevTools MCP",
+          "texto": [
+            "Console with levels, every request with its status, performance traces, and Lighthouse. It's the server to ask \"why did it fail?\".",
+            "Both can stay connected to the same agent: lesson 2's <code>configurar.mjs</code> already wrote both into <code>.mcp.json</code>."
+          ]
+        },
+        {
+          "titulo": "Gotchas in 1.10.1",
+          "sub": "tested on 10/19",
+          "texto": [
+            "Telemetry: by default the server sends usage statistics to Google and sends performance trace URLs to the CrUX API. The kit turns this off with <code>--no-usage-statistics</code> and <code>--no-performance-crux</code>.",
+            "Every page tool needs a <code>pageId</code> (get it from <code>list_pages</code>). With Playwright's Chromium, pass <code>--chromeArg=--no-sandbox</code>, which is the Playwright default; without it the browser closes with \"Target closed\"."
+          ],
+          "exemplo": {
+            "rot": "New version",
+            "texto": "Version 1.11.0 came out on 10/15/2026 and was not tested here. The server itself warns \"Update available\"; the kit stays on 1.10.1 until the next capture."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Find the error and bring it to zero",
+      "sub": "devtools.mjs opens the kit's home page and lists the console and network. The fix runs on a copy, without touching the kit.",
+      "blocos": [
+        {
+          "rot": "Terminal · console and network of the kit page",
+          "icone": "lupa",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode devtools.mjs; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · fix in a copy and check",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nE=${TMPDIR:-/tmp}/kit3-aula3; rm -rf \"$E\"; cp -r site \"$E\"\necho '{\"texto\": \"Revisão básica com 10% de desconto em novembro.\"}' > \"$E/promocoes.json\"\nSITE=\"$E\" node devtools.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>→ navigate_page {\"url\":\"http://127.0.0.1:PORTA/\",\"pageId\":1}\n→ list_console_messages {\"pageId\":1}\n  [error] Failed to load resource: the server responded with a status of 404 (Not Found)\n  [error] promoções: falha ao carregar promocoes.json (HTTP 404)\n→ list_network_requests {\"pageId\":1}\n  GET http://127.0.0.1:PORTA/ [200]\n  GET http://127.0.0.1:PORTA/estilo.css [200]\n  GET http://127.0.0.1:PORTA/promocoes.json [404]\nerros no console: 2 · requisições: 3 · com falha: 1\nsaída: 1</pre><p>Two console errors (the browser's 404 and the page's own message) and one failed request. On screen, the page only says \"Sem promoções no momento\".</p>"
+          },
+          {
+            "rot": "After the fix (10/19/2026)",
+            "html": "<pre>→ navigate_page {\"url\":\"http://127.0.0.1:PORTA/\",\"pageId\":1}\n→ list_console_messages {\"pageId\":1}\n→ list_network_requests {\"pageId\":1}\n  GET http://127.0.0.1:PORTA/ [200]\n  GET http://127.0.0.1:PORTA/estilo.css [200]\n  GET http://127.0.0.1:PORTA/promocoes.json [200]\nerros no console: 0 · requisições: 3 · com falha: 0\nsaída: 0</pre><p>The <code>SITE</code> variable swaps the served folder for the copy in <code>/tmp/kit3-aula3</code>, which has the <code>promocoes.json</code>. Zero errors, zero failures, exit 0.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The kit's error and your site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Find the 404",
+          "min": "5 min",
+          "texto": "Run the first block. Open kit/site/index.html and find the line that asks for the missing file.",
+          "pronto": "<code>node devtools.mjs</code> → <code>erros no console: 2 · requisições: 3 · com falha: 1</code> and <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Bring it to zero on the copy",
+          "min": "10 min",
+          "texto": "Run the second block. Then change the text in the copy's promocoes.json and check that the page shows the new text.",
+          "pronto": "<code>SITE=/tmp/kit3-aula3 node devtools.mjs</code> → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · Your site's console",
+          "min": "10 min",
+          "texto": "Run devtools.mjs with the address of one of your sites. For each error, note whether an agent would lose anything because of it.",
+          "pronto": "<code>node devtools.mjs</code> with your site's address → line <code>erros no console: N · requisições: M · com falha: F</code>, with N and F written down."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "The page shows \"Sem promoções no momento\" and looks normal. Where does the agent find out something broke?",
+          "opcoes": [
+            "In the page title, which changes when there is an error",
+            "In the accessibility snapshot, which flags the error",
+            "In the page's WebMCP tool list",
+            "In the console and network: promocoes.json returned 404"
+          ],
+          "certa": 3,
+          "explica": "The error only shows up in list_console_messages and list_network_requests. The screen and the tree show the page's fallback text.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Why does the kit pass --no-usage-statistics and --no-performance-crux to Chrome DevTools MCP?",
+          "opcoes": [
+            "Because without them the server can't open the browser in headless mode",
+            "Because by default it sends usage data to Google and URLs to CrUX",
+            "Because they speed up the network request list",
+            "Because Playwright's Chromium doesn't accept telemetry"
+          ],
+          "certa": 1,
+          "explica": "Both options are on by default in 1.10.1, according to --help itself. In a local test, there is no reason to send data out.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "The server refused the console call, saying the pageId is missing. What do you do?",
+          "opcoes": [
+            "Call list_pages and pass the pageId in your calls",
+            "Swap the kit's Chromium for stable Chrome",
+            "Turn off telemetry, which blocks the page",
+            "Open the page over file:// instead of http://"
+          ],
+          "certa": 0,
+          "explica": "In 1.10.1, per-page routing is on by default: every page tool asks for the pageId, which comes from list_pages.",
+          "ref": "passos"
+        },
+        {
+          "p": "Which server do you turn on so the agent can fill in and submit a form?",
+          "opcoes": [
+            "Only DevTools MCP, which is Google's official one",
+            "None: forms only work with computer use",
+            "Playwright MCP, which acts through the tree using refs",
+            "Lighthouse, which tests the form fields"
+          ],
+          "certa": 2,
+          "explica": "Playwright MCP is the strong one for acting; DevTools MCP for investigating. You can keep both on at the same time.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Console and network",
+          "texto": "What the screen hides, list_console_messages and list_network_requests show."
+        },
+        {
+          "t": "Telemetry off",
+          "texto": "Version 1.10.1 sends usage data to Google by default; the kit turns it off."
+        },
+        {
+          "t": "One acts, one investigates",
+          "texto": "Playwright MCP for the task, DevTools MCP for the why."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: devtools.mjs",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/devtools.mjs",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Chrome DevTools MCP: tools and options",
+          "href": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+          "icone": "lupa"
+        },
+        {
+          "t": "Course 1 of the program: an MCP server for your service (revised 2026-07-28)",
+          "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/en/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

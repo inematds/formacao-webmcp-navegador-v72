@@ -1,0 +1,21 @@
+Chromium do kit: chromium-1248/chrome-linux-arm64/chrome
+escrevi kit/pw-config.json e kit/.mcp.json (servidores: playwright, devtools)
+
+# Codex: cole em ~/.codex/config.toml se quiser os mesmos servidores lá
+[mcp_servers.playwright]
+command = "~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/playwright-mcp"
+args = ["--config", "~/projetos/formacao-webmcp-navegador-v72/kit/pw-config.json"]
+
+[mcp_servers.devtools]
+command = "~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/chrome-devtools-mcp"
+args = ["--headless", "--isolated", "--executablePath", "~/.cache/ms-playwright/chromium-1248/chrome-linux-arm64/chrome", "--no-usage-statistics", "--no-performance-crux", "--chromeArg=--no-sandbox"]
+
+playwright:
+  Scope: Project config (shared via .mcp.json)
+  Status: ⏸ Pending approval (run `claude` to approve)
+  Type: stdio
+  Command: ~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/playwright-mcp
+  Args: --config ~/projetos/formacao-webmcp-navegador-v72/kit/pw-config.json
+
+To remove this server, run: claude mcp remove playwright -s project
+saída: 0

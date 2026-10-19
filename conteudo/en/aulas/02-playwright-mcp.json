@@ -1,0 +1,292 @@
+{
+  "slug": "playwright-mcp",
+  "num": 2,
+  "menu": "Playwright",
+  "titulo": "Playwright MCP in Claude Code/Codex: the accessibility snapshot in practice",
+  "titulo_curto": "Playwright MCP",
+  "minutos": 20,
+  "lead": "Playwright MCP gives your coding agent a browser. It doesn't send a screenshot: it sends the accessibility snapshot, with a reference (ref) on each control, and the agent acts through those refs. In this lesson a script makes exactly the calls the agent would make, without a model, and then you connect the server to Claude Code or Codex.",
+  "objetivo": "do with Playwright MCP what the agent does: read the snapshot, find the control by its ref and act, and connect the server to your agent.",
+  "competencias": [
+    "ler-snapshot-com-ref",
+    "agir-pela-referencia",
+    "ligar-mcp-de-navegador-ao-agente"
+  ],
+  "aprende": [
+    {
+      "icone": "lupa",
+      "t": "The snapshot with refs (e13, e15, e18)"
+    },
+    {
+      "icone": "seta",
+      "t": "The calls: navigate, snapshot, type, select, click, wait_for"
+    },
+    {
+      "icone": "relogio",
+      "t": "The common mistake: taking the snapshot before the page has finished loading"
+    },
+    {
+      "icone": "chip",
+      "t": "Connect to Claude Code (.mcp.json) and Codex (config.toml)"
+    }
+  ],
+  "hero_alt": "A laptop open in a dark terminal, next to a monitor showing a booking form, neutral office light.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "From snapshot to click",
+      "sub": "Click each block.",
+      "nos": [
+        {
+          "icone": "seta",
+          "titulo": "Navigate",
+          "sub": "browser_navigate",
+          "detalhe": "The agent opens the URL. Playwright MCP 0.0.83 replies with the URL, the title, how many errors are in the console and, if the page registered WebMCP tools, how many there are (lesson 4)."
+        },
+        {
+          "icone": "camadas",
+          "titulo": "Snapshot",
+          "sub": "tree + ref",
+          "forte": true,
+          "detalhe": "browser_snapshot returns the accessibility tree in YAML: role, name and one ref per element, like <code>textbox \"Seu nome\" [ref=e13]</code>. It's the same format course 0 printed, now with refs."
+        },
+        {
+          "icone": "cerebro",
+          "titulo": "Choose",
+          "sub": "model or script",
+          "detalhe": "The model reads the snapshot and picks the ref. In the dry run, ver-como-agente.mjs does the picking, looking for role and name. If a control has no name, neither one can find it reliably."
+        },
+        {
+          "icone": "check",
+          "titulo": "Act",
+          "sub": "by ref",
+          "detalhe": "browser_type, browser_select_option and browser_click receive <code>target</code> (the ref) and <code>element</code> (a text description, used to ask for permission). Then a new snapshot shows the result."
+        }
+      ],
+      "volta": "After acting, a new snapshot",
+      "legenda": "A ref is valid for that snapshot only. If the page changed, take another."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "What the agent receives and what it does",
+      "sub": "Reading the dry-run output.",
+      "passos": [
+        {
+          "titulo": "The tools",
+          "sub": "25 in 0.0.83",
+          "texto": [
+            "The server exposes 25 browser tools (<code>browser_navigate</code>, <code>browser_snapshot</code>, <code>browser_click</code>, <code>browser_type</code>, <code>browser_select_option</code>, <code>browser_wait_for</code>, <code>browser_console_messages</code>…). The agent sees them all in the list and chooses.",
+            "The project's documentation today also recommends a CLI-and-skills route for coding agents; the kit uses the tools over MCP, which is what Claude Code and Codex read."
+          ]
+        },
+        {
+          "titulo": "Refs, not coordinates",
+          "sub": "e13, e15, e18",
+          "texto": [
+            "In the dry run, the script found <code>textbox \"Seu nome\" = e13</code>, <code>combobox \"Serviço\" = e15</code> and <code>button \"Ver horários\" = e18</code> and acted through them. No pixels.",
+            "That's why the HTML from course 0 matters: the label becomes the name, and the name is how the agent finds the ref."
+          ]
+        },
+        {
+          "titulo": "Wait for the proof",
+          "sub": "browser_wait_for",
+          "texto": [
+            "The times arrive 1.5 s after the click. With <code>browser_wait_for</code> waiting for the text \"horários livres para\", the snapshot comes back complete. Without waiting, you get \"Carregando horários…\" and zero times.",
+            "Wait for the text that proves the result, not for a number of seconds."
+          ],
+          "exemplo": {
+            "rot": "Who pays for the mistake",
+            "texto": "An agent that takes the snapshot too early answers \"there are no times\" with full confidence. Lesson 7 comes back to this case."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The dry run: the agent's calls, without a model",
+      "sub": "ver-como-agente.mjs connects Playwright MCP over stdio, the way Claude Code would, and does the task \"see the times for Revisão completa\".",
+      "blocos": [
+        {
+          "rot": "Terminal · do the task through Playwright MCP",
+          "icone": "terminal",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode ver-como-agente.mjs; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · the same, without waiting for the list",
+          "icone": "relogio",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode ver-como-agente.mjs --sem-esperar; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Captured output (10/19/2026)",
+            "html": "<pre>→ browser_navigate {\"url\":\"http://127.0.0.1:PORTA/agendar.html\"}\n→ browser_snapshot {}\n  achei: textbox \"Seu nome\" = e13 · combobox \"Serviço\" = e15 · button \"Ver horários\" = e18\n→ browser_type {\"target\":\"e13\",\"text\":\"Ana\"}\n→ browser_select_option {\"target\":\"e15\",\"values\":[\"Revisão completa\"]}\n→ browser_click {\"target\":\"e18\"}\n→ browser_wait_for {\"text\":\"horários livres para\"}\n→ browser_snapshot {}\n  status na página: 2 horários livres para Revisão completa em 2026-11-03.\ntarefa: horários de Revisão completa em 2026-11-03 → 2 (08:00, 13:00) em 7 chamadas\nsaída: 0</pre><p>Seven calls. Each line with <code>→</code> is a tool called by the MCP client; <code>PORTA</code> stands in for the local server's random port.</p>"
+          },
+          {
+            "rot": "Common mistake: snapshot too early",
+            "html": "<pre>→ browser_navigate {\"url\":\"http://127.0.0.1:PORTA/agendar.html\"}\n→ browser_snapshot {}\n  achei: textbox \"Seu nome\" = e13 · combobox \"Serviço\" = e15 · button \"Ver horários\" = e18\n→ browser_type {\"target\":\"e13\",\"text\":\"Ana\"}\n→ browser_select_option {\"target\":\"e15\",\"values\":[\"Revisão completa\"]}\n→ browser_click {\"target\":\"e18\"}\n→ browser_snapshot {}\n  status na página: Carregando horários…\ntarefa: horários de Revisão completa em 2026-11-03 → 0 (nenhum) em 6 chamadas\n  a lista ainda estava carregando quando o snapshot foi tirado\nsaída: 1</pre><p>Without <code>browser_wait_for</code>, the snapshot catches \"Carregando horários…\". The script exits with 1, but a hurried agent would say there's no time available.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Your site and your agent",
+      "sub": "First read-only on your site; then the server connected to Claude Code and Codex, with the kit's Chromium.",
+      "blocos": [
+        {
+          "rot": "Terminal · snapshot of one of your sites",
+          "icone": "lupa",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode ver-como-agente.mjs https://inema.club/; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · connect to Claude Code and Codex",
+          "icone": "chip",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode configurar.mjs && claude mcp get playwright; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Real site: inema.club (10/19/2026)",
+            "html": "<pre>→ browser_navigate {\"url\":\"https://inema.club/\"}\n→ browser_snapshot {}\n- generic [active] [ref=e1]:\n  - banner [ref=e2]:\n    - generic [ref=e3]:\n      - link \"INEMA.VIP Participe da Comunidade\" [ref=e4] [cursor=pointer]:\n        - /url: https://inema.vip\n        - img \"INEMA.VIP\" [ref=e5]\n        - generic [ref=e6]: Participe da Comunidade\n      - link \"INEMA.PRO Assine o INEMA.PRO\" [ref=e7] [cursor=pointer]:\n        - /url: https://inema.pro\n        - img \"INEMA.PRO\" [ref=e8]\n        - generic [ref=e9]: Assine o INEMA.PRO\n      - generic [ref=e10]:\n        - heading \"INEMA.CLUB Portal INEMA\" [level=1] [ref=e11]\n        - paragraph [ref=e12]: \"Aprenda Inteligência Artificial na prática: cursos, agentes, automação e comunidade\"\n        - generic [ref=e13]:\n(…)\nferramentas WebMCP vistas: 8 · buscar_conhecimento [readOnly], buscar_cursos [readOnly], comparar_cursos [readOnly], …\nsnapshot: 1040 linhas · 749 elementos com ref\nsaída: 0</pre><p>Instead of inema.club, use the address of one of your own sites. The summary shows how many lines and refs the agent receives. inema.club has an origin trial token, so the kit's Chromium 156 also saw its 8 WebMCP tools, with no flag at all.</p>"
+          },
+          {
+            "rot": "Connect to the agent (10/19/2026)",
+            "html": "<pre>Chromium do kit: chromium-1248/chrome-linux-arm64/chrome\nescrevi kit/pw-config.json e kit/.mcp.json (servidores: playwright, devtools)\n\n# Codex: cole em ~/.codex/config.toml se quiser os mesmos servidores lá\n[mcp_servers.playwright]\ncommand = \"~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/playwright-mcp\"\nargs = [\"--config\", \"~/projetos/formacao-webmcp-navegador-v72/kit/pw-config.json\"]\n\n[mcp_servers.devtools]\ncommand = \"~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/chrome-devtools-mcp\"\nargs = [\"--headless\", \"--isolated\", \"--executablePath\", \"~/.cache/ms-playwright/chromium-1248/chrome-linux-arm64/chrome\", \"--no-usage-statistics\", \"--no-performance-crux\", \"--chromeArg=--no-sandbox\"]\n\nplaywright:\n  Scope: Project config (shared via .mcp.json)\n  Status: ⏸ Pending approval (run `claude` to approve)\n  Type: stdio\n  Command: ~/projetos/formacao-webmcp-navegador-v72/kit/node_modules/.bin/playwright-mcp\n  Args: --config ~/projetos/formacao-webmcp-navegador-v72/kit/pw-config.json\n\nTo remove this server, run: claude mcp remove playwright -s project\nsaída: 0</pre><p><code>configurar.mjs</code> writes <code>kit/.mcp.json</code> (Claude Code, project scope) and prints the Codex snippet, which you paste into <code>~/.codex/config.toml</code> if you want it. A project server stays \"Pending approval\" until you open <code>claude</code> inside <code>kit/</code> and approve it; after that, <code>/mcp</code> shows the server connected (this step was not captured).</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "The dry run, your site, and your agent.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · The seven calls",
+          "min": "10 min",
+          "texto": "Run the dry run, then the no-wait version. For each line with →, say in one sentence what the agent knew at that moment.",
+          "pronto": "<code>node ver-como-agente.mjs</code> → <code>2 (08:00, 13:00) em 7 chamadas</code> and <code>saída: 0</code>; with <code>--sem-esperar</code> → <code>0 (nenhum)</code> and <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · The snapshot of your site",
+          "min": "10 min",
+          "texto": "Run the read block with the address of one of your own sites. Open the same page in the browser and find three controls in the output by name.",
+          "pronto": "<code>node ver-como-agente.mjs</code> with your site's address → <code>snapshot: N linhas · M elementos com ref</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · The server in your agent",
+          "min": "10 min",
+          "texto": "Run configurar.mjs. In Claude Code, open claude inside kit/ and approve the project server. In Codex, paste the printed snippet into config.toml.",
+          "pronto": "<code>claude mcp get playwright</code> → <code>Scope: Project config</code> and, after you approve, <code>Status: ✓ Connected</code>; in Codex, the server shows up in the <code>/mcp</code> list."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "The snapshot shows textbox \"Seu nome\" [ref=e13]. How does the agent type into this field?",
+          "opcoes": [
+            "It calls browser_type with target e13 and the text",
+            "It clicks the field's coordinates on a screenshot",
+            "It runs document.getElementById('nome') in the console",
+            "It asks the user to copy the text into the field"
+          ],
+          "certa": 0,
+          "explica": "Playwright MCP acts through the snapshot ref. Coordinates are the computer use path; the console is another server (lesson 3).",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "The agent clicked \"Ver horários\", took the snapshot right away, and saw \"Carregando horários…\". What was missing?",
+          "opcoes": [
+            "A snapshot with a screenshot alongside the tree",
+            "Waiting for the text that proves the result",
+            "Double-clicking the button to force the list",
+            "Reloading the page before clicking the button"
+          ],
+          "certa": 1,
+          "explica": "browser_wait_for with the text \"horários livres para\" waits for the proof. Reloading loses what was filled in; clicking again fires another search.",
+          "ref": "codigo"
+        },
+        {
+          "p": "What is the element field for in click and type calls?",
+          "opcoes": [
+            "So the server can find the control when the ref fails",
+            "To indicate the ARIA role the control should have",
+            "To describe the action in text and ask for permission",
+            "So Playwright can generate the control's CSS selector"
+          ],
+          "certa": 2,
+          "explica": "element is the human-readable description used to ask the person for permission; the target (the ref) is what finds the control.",
+          "ref": "diagrama"
+        },
+        {
+          "p": "After configurar.mjs, claude mcp get shows \"Pending approval\". What should you do?",
+          "opcoes": [
+            "Delete .mcp.json and add the server in the global scope",
+            "Run configurar.mjs again with the --webmcp flag",
+            "Install stable Chrome, which the server requires",
+            "Open claude inside kit/ and approve the server"
+          ],
+          "certa": 3,
+          "explica": "A project server (.mcp.json) needs approval the first time. The kit uses Playwright's Chromium; it doesn't need stable Chrome.",
+          "ref": "codigo"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Snapshot with refs",
+          "texto": "The agent receives the accessibility tree and acts through refs, not pixels."
+        },
+        {
+          "t": "Wait for the proof",
+          "texto": "A snapshot taken too early becomes a wrong answer that looks right."
+        },
+        {
+          "t": "Connected to your agent",
+          "texto": "A .mcp.json in the kit for Claude Code, the same snippet in Codex's config.toml."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: ver-como-agente.mjs",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/ver-como-agente.mjs",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Playwright MCP: tools and options",
+          "href": "https://github.com/microsoft/playwright-mcp",
+          "icone": "lupa"
+        },
+        {
+          "t": "Playwright: ARIA snapshots",
+          "href": "https://playwright.dev/docs/aria-snapshots",
+          "icone": "lupa"
+        },
+        {
+          "t": "Course 0, lesson 2: what the agent sees",
+          "href": "https://inematds.github.io/formacao-webmcp-base-v72/en/aulas/o-que-o-agente-ve/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

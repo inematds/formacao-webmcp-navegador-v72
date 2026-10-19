@@ -1,0 +1,324 @@
+{
+  "slug": "bateria",
+  "num": 8,
+  "menu": "Your battery",
+  "titulo": "The task battery for your site (map + generator)",
+  "titulo_curto": "Your site's battery",
+  "minutos": 20,
+  "lead": "Time to put it together: the tasks that matter on your site, each with a contract, steps, and what to expect, in a battery that the dry-run robot runs on every change and that your agent can run whenever you want. conferir-bateria.mjs tells you if it is ready; the map and the generator organize what is missing.",
+  "objetivo": "build the task battery for your site and check that each task has a contract, proof, and stop.",
+  "competencias": [
+    "montar-bateria-do-proprio-site",
+    "incluir-tarefa-de-parada",
+    "planejar-a-rodada-de-testes"
+  ],
+  "aprende": [
+    {
+      "icone": "lista",
+      "t": "The battery template and what the checker requires"
+    },
+    {
+      "icone": "portao",
+      "t": "At least one task that has to stop"
+    },
+    {
+      "icone": "robo",
+      "t": "Run it against your local site"
+    },
+    {
+      "icone": "calendario",
+      "t": "The plan with dates"
+    }
+  ],
+  "hero_alt": "A test bench with a dark monitor showing a list of checked tasks and an industrial robot in the background, neutral light.",
+  "secoes": [
+    {
+      "tipo": "mapa",
+      "titulo": "The course map",
+      "sub": "Four steps, the exercises in each one, and what each step delivers. Tap an exercise to see its \"done when\".",
+      "degraus": [
+        {
+          "aula": "playwright-mcp",
+          "icone": "lupa",
+          "quando": "Day 1",
+          "titulo": "See",
+          "sub": "lessons 1 to 3",
+          "saida": "The ready-made kit, your site's snapshot, and the console and network errors.",
+          "passo": "Agent map, Playwright MCP, and DevTools MCP against the kit and against your site."
+        },
+        {
+          "aula": "consumir-webmcp",
+          "icone": "chip",
+          "quando": "Day 2",
+          "titulo": "Consume",
+          "sub": "lesson 4",
+          "saida": "The agent with and without the API, and the annotated origin test.",
+          "passo": "Requires step 1. Discovery, annotations, fallback, and iframes, with an experimental label."
+        },
+        {
+          "aula": "contrato",
+          "icone": "alvo",
+          "quando": "Day 3",
+          "titulo": "Contract",
+          "sub": "lesson 5",
+          "saida": "Two complete contracts, one of them for your site.",
+          "passo": "Goal, limits, proof, and stop, checked by the script."
+        },
+        {
+          "aula": "onde-falha",
+          "icone": "portao",
+          "quando": "Day 4",
+          "titulo": "Test",
+          "sub": "lessons 6 to 8",
+          "saida": "Your site's battery running, with the result saved to a file.",
+          "passo": "Battery in the dry run, your agent once, the limits, and your site's battery."
+        }
+      ],
+      "resultado": {
+        "titulo": "At the end of the course",
+        "texto": "A task battery for your site that runs on every change and saves the result, with the stops in the right places.",
+        "total": "10 exercises"
+      },
+      "rolagem_fim": {
+        "titulo": "The whole course",
+        "texto": "See, consume, contract, and test. Each step has exercises with an expected output; the battery brings it all together."
+      },
+      "legenda": "Suggested order: each step uses the kit or the contract from the previous one."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "From the template to your battery",
+      "sub": "Four decisions.",
+      "passos": [
+        {
+          "titulo": "Which tasks",
+          "sub": "3 to 6",
+          "texto": [
+            "The ones that make money or cause headaches: finding a price, seeing available times, getting to the contact page. Start read-only.",
+            "Each task is a contract: a goal tied to the page, limits with a \"no\", proof in quotes, a stop with a number."
+          ]
+        },
+        {
+          "titulo": "The steps",
+          "sub": "by name",
+          "texto": [
+            "The robot understands four steps: <code>abrir</code>, <code>preencher</code> [label, value], <code>escolher</code> [label, option], and <code>clicar</code> [button or link text]. All by name from the tree.",
+            "If a step can't find the control by name, the problem is usually the HTML (course 0, lesson 3), not the battery."
+          ]
+        },
+        {
+          "titulo": "A required",
+          "sub": "stop",
+          "texto": [
+            "At least one task with <code>\"espera\": \"parar\"</code>: your site's login, verification, or confirmation. It proves the test stops where it should.",
+            "The checker rejects a battery with no stop."
+          ]
+        },
+        {
+          "titulo": "Where it runs",
+          "sub": "locally",
+          "texto": [
+            "On your local site (at <code>127.0.0.1</code>, on your project's port) or a staging site. The checker warns you when the address is not local.",
+            "No production with real data, purchases, or submissions."
+          ],
+          "exemplo": {
+            "rot": "When the spec changes",
+            "texto": "A frozen battery and regression testing for when WebMCP changes again are covered in course 5. Your battery is the starting point."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "The battery checker",
+      "sub": "The kit's template doesn't pass yet (one task, no stop); the limits battery passes.",
+      "blocos": [
+        {
+          "rot": "File · kit/modelo-bateria.json",
+          "icone": "arquivo",
+          "conteudo": "{\n  \"site\": \"http://127.0.0.1:8000/\",\n  \"tarefas\": [\n    {\n      \"id\": \"t1-trocar\",\n      \"objetivo\": \"Na página [página].html, trocar por: o que a pessoa quer conseguir nesta página.\",\n      \"limites\": \"Trocar por: o que o agente pode fazer. Não clicar em Comprar nem em Confirmar.\",\n      \"prova\": { \"texto\": \"trocar pelo texto que aparece quando deu certo\" },\n      \"parada\": \"Pare se aparecer login, verificação ou confirmação. Pare depois de 10 ações.\",\n      \"espera\": \"ok\",\n      \"passos\": [\n        { \"abrir\": \"index.html\" },\n        { \"preencher\": [\"Rótulo do campo\", \"valor\"] },\n        { \"clicar\": \"Texto do botão\" }\n      ]\n    }\n  ]\n}"
+        },
+        {
+          "rot": "Terminal · copy the template and check",
+          "icone": "x",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\ncp modelo-bateria.json minha-bateria.json\nnode conferir-bateria.mjs minha-bateria.json; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · check a finished battery",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode conferir-bateria.mjs limites.json; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "The template, before (10/19/2026)",
+            "html": "<pre>  só 1 tarefas (mínimo 3)\n  nenhuma tarefa com espera \"parar\" (inclua login, verificação ou confirmação)\nbateria com 2 problemas · minha-bateria.json\nsaída: 1</pre><p>Two gaps: only one task and no stop. This is the starting point for E1.</p>"
+          },
+          {
+            "rot": "A finished battery (10/19/2026)",
+            "html": "<pre>bateria ok: 4 tarefas · 4 partes em todas · 3 com parada esperada · limites.json\nsaída: 0</pre><p>The limits battery from lesson 7 passes: four tasks, all four parts in each, three expected stops.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Practice",
+      "sub": "Your battery, checked and running.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Build the battery",
+          "min": "30 min",
+          "texto": "Complete minha-bateria.json with 3 to 6 tasks from your site, one of them with \"espera\": \"parar\". Replace the site with your project's local address.",
+          "pronto": "<code>node conferir-bateria.mjs minha-bateria.json</code> → <code>bateria ok: N tarefas · 4 partes em todas · P com parada esperada</code> and <code>saída: 0</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Run it against your site",
+          "min": "15 min",
+          "texto": "With your site running locally, run the battery. Each ✗ becomes a line in your plan: is it a bug in the site, in the HTML, or in the battery?",
+          "pronto": "<code>node rodar-bateria.mjs minha-bateria.json</code> → <code>N tarefas · N como esperado</code> and <code>saída: 0</code>, with <code>resultados/minha-bateria.jsonl</code> saved."
+        }
+      ]
+    },
+    {
+      "tipo": "gerador",
+      "titulo": "Generate your plan with dates",
+      "sub": "Pick a start date and how much time you have per week.",
+      "curso": "Browser agents: test your site the way the agent sees it",
+      "horas_padrao": 3,
+      "degraus": [
+        {
+          "titulo": "Lesson 1 · The agent map",
+          "aula": "mapa"
+        },
+        {
+          "titulo": "Lesson 2 · Playwright MCP",
+          "aula": "playwright-mcp"
+        },
+        {
+          "titulo": "Lesson 3 · Chrome DevTools MCP",
+          "aula": "devtools-mcp"
+        },
+        {
+          "titulo": "Lesson 4 · The agent and WebMCP",
+          "aula": "consumir-webmcp"
+        },
+        {
+          "titulo": "Lesson 5 · The task contract",
+          "aula": "contrato"
+        },
+        {
+          "titulo": "Lesson 6 · An agent tests the site",
+          "aula": "agente-testa"
+        },
+        {
+          "titulo": "Lesson 7 · Where the screen fails",
+          "aula": "onde-falha"
+        },
+        {
+          "titulo": "Lesson 8 · Your site's battery",
+          "aula": "bateria"
+        }
+      ],
+      "txt": {
+        "titulo": "Plan — Browser agents: test the site the way the agent sees it",
+        "inicio": "Start",
+        "ritmo": "Pace",
+        "termino": "Expected finish",
+        "ate": "by",
+        "pronto": "done when",
+        "semanas": "weeks",
+        "travou": "## What got stuck and what I decided",
+        "h": "h per week",
+        "exs": "exercises"
+      }
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Lesson quiz",
+      "perguntas": [
+        {
+          "p": "The checker rejected your battery with \"nenhuma tarefa com espera parar\". Why does it require that?",
+          "opcoes": [
+            "Because the dry-run robot only runs with a stop",
+            "Because a reading task always ends in a stop",
+            "To prove the test stops where it should",
+            "Because Playwright MCP needs a stop"
+          ],
+          "certa": 2,
+          "explica": "A battery with no stop never tests whether the agent respects login, verification, and confirmation, which are the points where a mistake costs the most.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "A step preencher [\"E-mail\", …] failed because the robot couldn't find the field by its label. Where is the most likely problem?",
+          "opcoes": [
+            "In the HTML: the field has no label that becomes a name",
+            "In the dry-run robot, which doesn't read email fields",
+            "In the kit's Chromium, which is too old",
+            "In the battery, which should use the field's id"
+          ],
+          "certa": 0,
+          "explica": "The robot finds it by the accessibility tree name, just like the agent. A field with no label has no reliable name: the fix is in the HTML (course 0, lesson 3).",
+          "ref": "passos"
+        },
+        {
+          "p": "Where should your battery run?",
+          "opcoes": [
+            "In production, because that's where the customer browses",
+            "On any site similar to yours",
+            "On a competitor's site, to compare",
+            "On your local or staging site"
+          ],
+          "certa": 3,
+          "explica": "A test agent only runs against your own site, local or staging. Production has real data; a third party's site isn't yours to automate.",
+          "ref": "passos",
+          "cert": true
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "In three sentences",
+      "itens": [
+        {
+          "t": "Your site's battery",
+          "texto": "3 to 6 tasks, each with a contract, steps, and what you expect."
+        },
+        {
+          "t": "At least one stop",
+          "texto": "Proves the test stops at login, verification, or confirmation."
+        },
+        {
+          "t": "Runs every time",
+          "texto": "The dry-run robot after every change; your agent whenever you want, checked by format."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Going further",
+      "links": [
+        {
+          "t": "Course kit: conferir-bateria.mjs and modelo-bateria.json",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/tree/main/kit",
+          "icone": "pasta"
+        },
+        {
+          "t": "Next course in the program: 4 · Security and trust between site and agent",
+          "href": "https://inematds.github.io/formacao-webmcp-seguranca-v72/en/",
+          "icone": "seta"
+        },
+        {
+          "t": "WebMCP Area: the whole program",
+          "href": "https://eventos.inema.pro/webmcp/",
+          "icone": "camadas"
+        }
+      ]
+    }
+  ]
+}

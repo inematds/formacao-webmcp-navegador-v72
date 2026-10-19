@@ -1,0 +1,257 @@
+{
+  "slug": "devtools-mcp",
+  "num": 3,
+  "menu": "DevTools",
+  "titulo": "Chrome DevTools MCP: ver o que o agente fez (console, rede)",
+  "titulo_curto": "Chrome DevTools MCP",
+  "minutos": 15,
+  "lead": "Quando o agente diz \"não consegui\", a resposta costuma estar no console ou na rede: um arquivo que deu 404, um erro de JavaScript. O Chrome DevTools MCP dá ao agente as mesmas abas que você abre no F12. Nesta aula você lista o console e a rede da página do kit, acha o erro plantado e zera.",
+  "objetivo": "ver pelo Chrome DevTools MCP o console e a rede da página que o agente abriu, achar o erro e zerar numa cópia corrigida.",
+  "competencias": [
+    "ler-console-e-rede-pelo-agente",
+    "achar-requisicao-com-falha",
+    "desligar-telemetria-do-servidor"
+  ],
+  "aprende": [
+    {
+      "icone": "lupa",
+      "t": "list_console_messages e list_network_requests"
+    },
+    {
+      "icone": "x",
+      "t": "O erro plantado: promocoes.json que dá 404"
+    },
+    {
+      "icone": "escudo",
+      "t": "Telemetria ligada por padrão e como desligar"
+    },
+    {
+      "icone": "chip",
+      "t": "pageId, sandbox e as outras pegadinhas da 1.10.1"
+    }
+  ],
+  "hero_alt": "Monitor escuro com o painel de ferramentas de desenvolvedor aberto, linhas de rede e console, luz neutra.",
+  "secoes": [
+    {
+      "tipo": "diagrama",
+      "titulo": "O F12 do agente",
+      "sub": "Clique em cada bloco.",
+      "nos": [
+        {
+          "icone": "robo",
+          "titulo": "Agente",
+          "sub": "pede",
+          "detalhe": "O Claude Code ou o Codex chama ferramentas do servidor. No ensaio, quem chama é o devtools.mjs."
+        },
+        {
+          "icone": "chip",
+          "titulo": "DevTools MCP",
+          "sub": "1.10.1",
+          "forte": true,
+          "detalhe": "O servidor do Google abre um Chrome (no kit, o Chromium do Playwright) e fala com ele pelo protocolo do DevTools. Expõe 30 ferramentas por padrão: navegar, clicar, console, rede, desempenho, Lighthouse, memória."
+        },
+        {
+          "icone": "terminal",
+          "titulo": "Console",
+          "sub": "erros e avisos",
+          "detalhe": "list_console_messages devolve cada mensagem com nível: <code>[error] promoções: falha ao carregar promocoes.json (HTTP 404)</code>."
+        },
+        {
+          "icone": "nuvem",
+          "titulo": "Rede",
+          "sub": "cada requisição",
+          "detalhe": "list_network_requests devolve método, URL e status: <code>GET …/promocoes.json [404]</code>. A página mostra \"Sem promoções no momento\" e parece normal; só a rede conta a verdade."
+        }
+      ],
+      "legenda": "A página parece certa. O console e a rede mostram que um arquivo sumiu."
+    },
+    {
+      "tipo": "passos",
+      "titulo": "Playwright MCP ou DevTools MCP?",
+      "sub": "Um age, o outro investiga.",
+      "passos": [
+        {
+          "titulo": "Para agir",
+          "sub": "Playwright MCP",
+          "texto": [
+            "Preencher, clicar e esperar pela árvore de acessibilidade, com refs. O Playwright MCP também lista console e rede (<code>browser_console_messages</code>, <code>browser_network_requests</code>), mas o forte dele é a tarefa.",
+            "Na aula 2 ele já avisava: \"Console: 1 errors\"."
+          ]
+        },
+        {
+          "titulo": "Para investigar",
+          "sub": "DevTools MCP",
+          "texto": [
+            "Console com nível, cada requisição com status, rastro de desempenho e Lighthouse. É o servidor para perguntar \"por que falhou?\".",
+            "Os dois podem ficar ligados no mesmo agente: o <code>configurar.mjs</code> da aula 2 já escreveu os dois no <code>.mcp.json</code>."
+          ]
+        },
+        {
+          "titulo": "Pegadinhas da 1.10.1",
+          "sub": "testadas em 19/10",
+          "texto": [
+            "Telemetria: por padrão o servidor manda estatísticas de uso ao Google e envia URLs de rastros de desempenho à API do CrUX. O kit desliga com <code>--no-usage-statistics</code> e <code>--no-performance-crux</code>.",
+            "Toda ferramenta de página pede <code>pageId</code> (pegue em <code>list_pages</code>). Com o Chromium do Playwright, passe <code>--chromeArg=--no-sandbox</code>, que é o padrão do Playwright; sem isso o navegador fecha com \"Target closed\"."
+          ],
+          "exemplo": {
+            "rot": "Versão nova",
+            "texto": "A 1.11.0 saiu em 15/10/2026 e não foi testada aqui. O próprio servidor avisa \"Update available\"; o kit fica na 1.10.1 até a próxima captura."
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "codigo",
+      "titulo": "Achar o erro e zerar",
+      "sub": "O devtools.mjs abre a página inicial do kit e lista console e rede. A correção roda numa cópia, sem mexer no kit.",
+      "blocos": [
+        {
+          "rot": "Terminal · console e rede da página do kit",
+          "icone": "lupa",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nnode devtools.mjs; echo \"saída: $?\""
+        },
+        {
+          "rot": "Terminal · corrigir numa cópia e conferir",
+          "icone": "check",
+          "conteudo": "cd ~/projetos/formacao-webmcp-navegador-v72/kit\nE=${TMPDIR:-/tmp}/kit3-aula3; rm -rf \"$E\"; cp -r site \"$E\"\necho '{\"texto\": \"Revisão básica com 10% de desconto em novembro.\"}' > \"$E/promocoes.json\"\nSITE=\"$E\" node devtools.mjs; echo \"saída: $?\""
+        }
+      ],
+      "saida": {
+        "selo": "real",
+        "abas": [
+          {
+            "rot": "Saída capturada (19/10/2026)",
+            "html": "<pre>→ navigate_page {\"url\":\"http://127.0.0.1:PORTA/\",\"pageId\":1}\n→ list_console_messages {\"pageId\":1}\n  [error] Failed to load resource: the server responded with a status of 404 (Not Found)\n  [error] promoções: falha ao carregar promocoes.json (HTTP 404)\n→ list_network_requests {\"pageId\":1}\n  GET http://127.0.0.1:PORTA/ [200]\n  GET http://127.0.0.1:PORTA/estilo.css [200]\n  GET http://127.0.0.1:PORTA/promocoes.json [404]\nerros no console: 2 · requisições: 3 · com falha: 1\nsaída: 1</pre><p>Dois erros no console (o 404 do navegador e a mensagem da página) e uma requisição com falha. A página, na tela, só diz \"Sem promoções no momento\".</p>"
+          },
+          {
+            "rot": "Depois da correção (19/10/2026)",
+            "html": "<pre>→ navigate_page {\"url\":\"http://127.0.0.1:PORTA/\",\"pageId\":1}\n→ list_console_messages {\"pageId\":1}\n→ list_network_requests {\"pageId\":1}\n  GET http://127.0.0.1:PORTA/ [200]\n  GET http://127.0.0.1:PORTA/estilo.css [200]\n  GET http://127.0.0.1:PORTA/promocoes.json [200]\nerros no console: 0 · requisições: 3 · com falha: 0\nsaída: 0</pre><p>A variável <code>SITE</code> troca a pasta servida pela cópia em <code>/tmp/kit3-aula3</code>, que tem o <code>promocoes.json</code>. Zero erros, zero falhas, saída 0.</p>"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "pratica",
+      "titulo": "Prática",
+      "sub": "O erro do kit e o seu site.",
+      "exercicios": [
+        {
+          "id": "e1",
+          "titulo": "E1 · Achar o 404",
+          "min": "5 min",
+          "texto": "Rode o primeiro bloco. Abra kit/site/index.html e ache a linha que pede o arquivo que falta.",
+          "pronto": "<code>node devtools.mjs</code> → <code>erros no console: 2 · requisições: 3 · com falha: 1</code> e <code>saída: 1</code>."
+        },
+        {
+          "id": "e2",
+          "titulo": "E2 · Zerar na cópia",
+          "min": "10 min",
+          "texto": "Rode o segundo bloco. Depois troque o texto do promocoes.json da cópia e confira que a página mostra o novo texto.",
+          "pronto": "<code>SITE=/tmp/kit3-aula3 node devtools.mjs</code> → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> e <code>saída: 0</code>."
+        },
+        {
+          "id": "e3",
+          "titulo": "E3 · O console do seu site",
+          "min": "10 min",
+          "texto": "Rode o devtools.mjs com o endereço de um site seu. Para cada erro, anote se o agente perderia alguma coisa por causa dele.",
+          "pronto": "<code>node devtools.mjs</code> com o endereço do seu site → linha <code>erros no console: N · requisições: M · com falha: F</code>, com N e F anotados."
+        }
+      ]
+    },
+    {
+      "tipo": "quiz",
+      "titulo": "Teste da aula",
+      "perguntas": [
+        {
+          "p": "A página mostra \"Sem promoções no momento\" e parece normal. Onde o agente descobre que algo quebrou?",
+          "opcoes": [
+            "No título da página, que muda quando há erro",
+            "No snapshot de acessibilidade, que marca o erro",
+            "Na lista de ferramentas WebMCP da página",
+            "No console e na rede: promocoes.json deu 404"
+          ],
+          "certa": 3,
+          "explica": "O erro só aparece em list_console_messages e list_network_requests. A tela e a árvore mostram o texto de reserva da página.",
+          "ref": "diagrama",
+          "cert": true
+        },
+        {
+          "p": "Por que o kit passa --no-usage-statistics e --no-performance-crux ao Chrome DevTools MCP?",
+          "opcoes": [
+            "Porque sem elas o servidor não consegue abrir o navegador em modo headless",
+            "Porque por padrão ele manda uso ao Google e URLs ao CrUX",
+            "Porque elas aceleram a lista de requisições de rede",
+            "Porque o Chromium do Playwright não aceita telemetria"
+          ],
+          "certa": 1,
+          "explica": "As duas opções vêm ligadas por padrão na 1.10.1, segundo o próprio --help. Num teste local, não há motivo para mandar dado para fora.",
+          "ref": "passos",
+          "cert": true
+        },
+        {
+          "p": "O servidor recusou a chamada de console dizendo que falta o pageId. O que fazer?",
+          "opcoes": [
+            "Chamar list_pages e passar o pageId nas chamadas",
+            "Trocar o Chromium do kit pelo Chrome estável",
+            "Desligar a telemetria, que bloqueia a página",
+            "Abrir a página em file:// em vez de http://"
+          ],
+          "certa": 0,
+          "explica": "Na 1.10.1 o roteamento por página vem ligado: toda ferramenta de página pede o pageId, que vem do list_pages.",
+          "ref": "passos"
+        },
+        {
+          "p": "Qual servidor você liga para o agente preencher e enviar um formulário?",
+          "opcoes": [
+            "Só o DevTools MCP, que é o oficial do Google",
+            "Nenhum: formulário só com computer use",
+            "O Playwright MCP, que age pela árvore com refs",
+            "O Lighthouse, que testa os campos do formulário"
+          ],
+          "certa": 2,
+          "explica": "Playwright MCP é o forte para agir; DevTools MCP para investigar. Os dois podem ficar ligados juntos.",
+          "ref": "passos"
+        }
+      ]
+    },
+    {
+      "tipo": "resumo",
+      "titulo": "Em três frases",
+      "itens": [
+        {
+          "t": "Console e rede",
+          "texto": "O que a tela esconde, list_console_messages e list_network_requests mostram."
+        },
+        {
+          "t": "Telemetria desligada",
+          "texto": "A 1.10.1 manda uso ao Google por padrão; o kit desliga."
+        },
+        {
+          "t": "Um age, outro investiga",
+          "texto": "Playwright MCP para a tarefa, DevTools MCP para o porquê."
+        }
+      ]
+    },
+    {
+      "tipo": "links",
+      "titulo": "Para ir além",
+      "links": [
+        {
+          "t": "Kit do curso: devtools.mjs",
+          "href": "https://github.com/inematds/formacao-webmcp-navegador-v72/blob/main/kit/devtools.mjs",
+          "icone": "arquivo"
+        },
+        {
+          "t": "Chrome DevTools MCP: ferramentas e opções",
+          "href": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+          "icone": "lupa"
+        },
+        {
+          "t": "Curso 1 da formação: servidor MCP do seu serviço (revisão 2026-07-28)",
+          "href": "https://inematds.github.io/formacao-webmcp-mcp-v72/",
+          "icone": "seta"
+        }
+      ]
+    }
+  ]
+}

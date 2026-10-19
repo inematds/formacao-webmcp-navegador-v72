@@ -1,0 +1,8 @@
+→ navigate_page {"url":"http://127.0.0.1:PORTA/","pageId":1}
+→ list_console_messages {"pageId":1}
+→ list_network_requests {"pageId":1}
+  GET http://127.0.0.1:PORTA/ [200]
+  GET http://127.0.0.1:PORTA/estilo.css [200]
+  GET http://127.0.0.1:PORTA/promocoes.json [200]
+erros no console: 0 · requisições: 3 · com falha: 0
+saída: 0
