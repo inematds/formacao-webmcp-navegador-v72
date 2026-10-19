@@ -75,7 +75,7 @@
           "titulo": "Nativo e sem",
           "sub": "dois modos",
           "texto": [
-            "O kit liga a API com <code>--enable-features=WebMCPTesting</code>, o mesmo que <code>chrome://flags/#enable-webmcp-testing</code>. Experimental: o Chrome Status diz \"Proposed\" e o origin trial vai do Chrome 149 ao 156.",
+            "O kit liga a API com <code>--enable-features=WebMCPTesting</code>, que pelo nome equivale à flag <code>chrome://flags/#enable-webmcp-testing</code> da documentação. Experimental: o Chrome Status diz \"Proposed\" e o origin trial vai do Chrome 149 ao 156.",
             "Sem a flag, <code>tools/list</code> fica com 25 ferramentas e o agente acha o formulário na árvore. É o teste de fallback que todo site com WebMCP precisa passar."
           ]
         },
@@ -168,7 +168,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Os dois modos e as origens.",
+      "sub": "Os dois modos e as origens. Cada exercício tem um \"pronto quando\".",
       "exercicios": [
         {
           "id": "e1",

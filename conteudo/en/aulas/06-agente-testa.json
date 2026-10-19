@@ -154,7 +154,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "The dry run always; the agent once.",
+      "sub": "The dry run always; the agent once. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",

@@ -58,7 +58,7 @@
         "itens": [
           "É o curso 3. Ordem sugerida: 0 → 1 → 2 → 3 → 4 → 5.",
           "Antes: 0 · base, 1 · servidor MCP, 2 · WebMCP na página. Depois: 4 · segurança, 5 · expert.",
-          "Antes de começar: Node 20.19 ou mais novo, git e um terminal Linux ou macOS (no Windows, WSL). Claude Code ou Codex só no passo opcional da aula 6.",
+          "Antes de começar: Node 20.19+, 22.12+ ou 23+, git e um terminal Linux ou macOS (no Windows, WSL). Claude Code ou Codex só no passo opcional da aula 6.",
           "O kit, o site de exemplo e as mensagens dos scripts estão em português em todas as versões do curso; os comandos são os mesmos."
         ]
       }

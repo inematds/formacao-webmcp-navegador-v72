@@ -133,7 +133,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "The kit's limits and one from your site.",
+      "sub": "The kit's limits and one from your site. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",

@@ -74,8 +74,7 @@
           "titulo": "Para actuar",
           "sub": "Playwright MCP",
           "texto": [
-            "Rellenar, hacer clic y esperar usando el árbol de accesibilidad, con refs. Playwright MCP también lista la consola y la red (<code>browser_console_messages</code>, <code>browser_network_requests</code>), pero su fuerte es la tarea.",
-            "En la clase 2 ya avisaba: \"Console: 1 errors\"."
+            "Rellenar, hacer clic y esperar usando el árbol de accesibilidad, con refs. Playwright MCP también lista la consola y la red (<code>browser_console_messages</code>, <code>browser_network_requests</code>), pero su fuerte es la tarea."
           ]
         },
         {
@@ -95,7 +94,7 @@
           ],
           "exemplo": {
             "rot": "Versión nueva",
-            "texto": "La 1.11.0 salió el 15/10/2026 y no se probó aquí. El propio servidor avisa \"Update available\"; el kit se queda en la 1.10.1 hasta la próxima captura."
+            "texto": "La 1.11.0 salió el 15/10/2026, según el registro de npm, y no fue probada aquí. El propio servidor avisa \"Update available\"; el kit se queda en la 1.10.1 hasta la próxima captura."
           }
         }
       ]
@@ -133,7 +132,7 @@
     {
       "tipo": "pratica",
       "titulo": "Práctica",
-      "sub": "El error del kit y tu sitio.",
+      "sub": "El error del kit y tu sitio. Cada ejercicio tiene un \"listo cuando\".",
       "exercicios": [
         {
           "id": "e1",
@@ -147,7 +146,7 @@
           "titulo": "E2 · Dejar en cero en la copia",
           "min": "10 min",
           "texto": "Ejecuta el segundo bloque. Después cambia el texto del promocoes.json de la copia y comprueba que la página muestra el texto nuevo.",
-          "pronto": "<code>SITE=/tmp/kit3-aula3 node devtools.mjs</code> → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> y <code>saída: 0</code>."
+          "pronto": "el segundo bloque (<code>SITE=\"$E\" node devtools.mjs</code>, con <code>E=/tmp/kit3-aula3</code>) → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> y <code>saída: 0</code>."
         },
         {
           "id": "e3",

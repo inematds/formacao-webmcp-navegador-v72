@@ -133,7 +133,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "Os limites do kit e um do seu site.",
+      "sub": "Os limites do kit e um do seu site. Cada exercício tem um \"pronto quando\".",
       "exercicios": [
         {
           "id": "e1",

@@ -74,8 +74,7 @@
           "titulo": "To act",
           "sub": "Playwright MCP",
           "texto": [
-            "Fill in, click, and wait using the accessibility tree, with refs. Playwright MCP also lists console and network (<code>browser_console_messages</code>, <code>browser_network_requests</code>), but its strength is the task.",
-            "In lesson 2 it already warned: \"Console: 1 errors\"."
+            "Fill in, click, and wait using the accessibility tree, with refs. Playwright MCP also lists console and network (<code>browser_console_messages</code>, <code>browser_network_requests</code>), but its strength is the task."
           ]
         },
         {
@@ -95,7 +94,7 @@
           ],
           "exemplo": {
             "rot": "New version",
-            "texto": "Version 1.11.0 came out on 10/15/2026 and was not tested here. The server itself warns \"Update available\"; the kit stays on 1.10.1 until the next capture."
+            "texto": "Version 1.11.0 came out on 10/15/2026, according to the npm registry, and was not tested here. The server itself warns \"Update available\"; the kit stays on 1.10.1 until the next capture."
           }
         }
       ]
@@ -133,7 +132,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "The kit's error and your site.",
+      "sub": "The kit's error and your site. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",
@@ -147,7 +146,7 @@
           "titulo": "E2 · Bring it to zero on the copy",
           "min": "10 min",
           "texto": "Run the second block. Then change the text in the copy's promocoes.json and check that the page shows the new text.",
-          "pronto": "<code>SITE=/tmp/kit3-aula3 node devtools.mjs</code> → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> and <code>saída: 0</code>."
+          "pronto": "the second block (<code>SITE=\"$E\" node devtools.mjs</code>, with <code>E=/tmp/kit3-aula3</code>) → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> and <code>saída: 0</code>."
         },
         {
           "id": "e3",

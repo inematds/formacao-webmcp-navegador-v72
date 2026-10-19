@@ -147,7 +147,7 @@
     {
       "tipo": "pratica",
       "titulo": "Práctica",
-      "sub": "De lo vago a lo completo, y un contrato de tu sitio.",
+      "sub": "De lo vago a lo completo, y un contrato de tu sitio. Cada ejercicio tiene un \"listo cuando\".",
       "exercicios": [
         {
           "id": "e1",

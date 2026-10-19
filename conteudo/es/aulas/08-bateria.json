@@ -77,7 +77,7 @@
       "resultado": {
         "titulo": "Al final del curso",
         "texto": "Una batería de tareas de tu sitio que se ejecuta con cada cambio y guarda el resultado, con las paradas en el lugar correcto.",
-        "total": "10 ejercicios"
+        "total": "10 de 19"
       },
       "rolagem_fim": {
         "titulo": "El curso completo",
@@ -166,7 +166,7 @@
     {
       "tipo": "pratica",
       "titulo": "Práctica",
-      "sub": "Tu batería, verificada y corriendo.",
+      "sub": "Tu batería, revisada y corriendo. Cada ejercicio tiene un \"listo cuando\".",
       "exercicios": [
         {
           "id": "e1",

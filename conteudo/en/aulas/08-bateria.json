@@ -77,7 +77,7 @@
       "resultado": {
         "titulo": "At the end of the course",
         "texto": "A task battery for your site that runs on every change and saves the result, with the stops in the right places.",
-        "total": "10 exercises"
+        "total": "10 of 19"
       },
       "rolagem_fim": {
         "titulo": "The whole course",
@@ -166,7 +166,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "Your battery, checked and running.",
+      "sub": "Your task battery, checked and running. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",

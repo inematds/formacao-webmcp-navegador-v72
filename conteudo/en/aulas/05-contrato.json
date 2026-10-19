@@ -147,7 +147,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "From vague to complete, and a contract for your own site.",
+      "sub": "From vague to complete, and a contract for your site. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",

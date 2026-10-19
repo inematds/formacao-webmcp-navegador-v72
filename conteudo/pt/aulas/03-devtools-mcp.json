@@ -74,8 +74,7 @@
           "titulo": "Para agir",
           "sub": "Playwright MCP",
           "texto": [
-            "Preencher, clicar e esperar pela árvore de acessibilidade, com refs. O Playwright MCP também lista console e rede (<code>browser_console_messages</code>, <code>browser_network_requests</code>), mas o forte dele é a tarefa.",
-            "Na aula 2 ele já avisava: \"Console: 1 errors\"."
+            "Preencher, clicar e esperar pela árvore de acessibilidade, com refs. O Playwright MCP também lista console e rede (<code>browser_console_messages</code>, <code>browser_network_requests</code>), mas o forte dele é a tarefa."
           ]
         },
         {
@@ -95,7 +94,7 @@
           ],
           "exemplo": {
             "rot": "Versão nova",
-            "texto": "A 1.11.0 saiu em 15/10/2026 e não foi testada aqui. O próprio servidor avisa \"Update available\"; o kit fica na 1.10.1 até a próxima captura."
+            "texto": "A 1.11.0 saiu em 15/10/2026, segundo o registro do npm, e não foi testada aqui. O próprio servidor avisa \"Update available\"; o kit fica na 1.10.1 até a próxima captura."
           }
         }
       ]
@@ -133,7 +132,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "O erro do kit e o seu site.",
+      "sub": "O erro do kit e o seu site. Cada exercício tem um \"pronto quando\".",
       "exercicios": [
         {
           "id": "e1",
@@ -147,7 +146,7 @@
           "titulo": "E2 · Zerar na cópia",
           "min": "10 min",
           "texto": "Rode o segundo bloco. Depois troque o texto do promocoes.json da cópia e confira que a página mostra o novo texto.",
-          "pronto": "<code>SITE=/tmp/kit3-aula3 node devtools.mjs</code> → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> e <code>saída: 0</code>."
+          "pronto": "o segundo bloco (<code>SITE=\"$E\" node devtools.mjs</code>, com <code>E=/tmp/kit3-aula3</code>) → <code>erros no console: 0 · requisições: 3 · com falha: 0</code> e <code>saída: 0</code>."
         },
         {
           "id": "e3",

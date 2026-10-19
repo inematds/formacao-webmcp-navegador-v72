@@ -15,7 +15,7 @@ node rodar-bateria.mjs bateria.json
 | `@playwright/mcp` | 0.0.83 (28/09/2026) |
 | `chrome-devtools-mcp` | 1.10.1 (23/09/2026) · telemetria desligada nos scripts |
 | `@modelcontextprotocol/sdk` | 1.32.1 (05/10/2026) · só o cliente de ensaio |
-| Node | 20.19 ou mais novo |
+| Node | 20.19+, 22.12+ ou 23+ |
 
 | Arquivo | Aula | O que faz |
 |---|---|---|

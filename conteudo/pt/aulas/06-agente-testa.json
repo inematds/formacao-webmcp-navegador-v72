@@ -154,7 +154,7 @@
     {
       "tipo": "pratica",
       "titulo": "Prática",
-      "sub": "O ensaio sempre; o agente uma vez.",
+      "sub": "O ensaio sempre; o agente uma vez. Cada exercício tem um \"pronto quando\".",
       "exercicios": [
         {
           "id": "e1",

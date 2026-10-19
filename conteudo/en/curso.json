@@ -70,7 +70,7 @@
         "itens": [
           "This is course 3. Suggested order: 0 → 1 → 2 → 3 → 4 → 5.",
           "Before: 0 · basics, 1 · MCP server, 2 · WebMCP on the page. After: 4 · security, 5 · expert.",
-          "Before you start: Node 20.19 or newer, git, and a Linux or macOS terminal (WSL on Windows). Claude Code or Codex only for the optional step in lesson 6.",
+          "Before you start: Node 20.19+, 22.12+ or 23+, git, and a Linux or macOS terminal (WSL on Windows). Claude Code or Codex only for the optional step in lesson 6.",
           "The kit, the example site, and the script messages are in Portuguese in all versions of the course; the commands are the same."
         ]
       }

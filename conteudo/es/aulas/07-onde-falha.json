@@ -133,7 +133,7 @@
     {
       "tipo": "pratica",
       "titulo": "Práctica",
-      "sub": "Los límites del kit y uno de tu sitio.",
+      "sub": "Los límites del kit y uno de tu sitio. Cada ejercicio tiene un \"listo cuando\".",
       "exercicios": [
         {
           "id": "e1",

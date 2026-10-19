@@ -53,7 +53,7 @@
           "icone": "nuvem",
           "titulo": "Browser with an agent",
           "sub": "built-in agent",
-          "detalhe": "The whole browser was built around the agent. ChatGPT Atlas (OpenAI) and auto browse in Chrome (Google) show up in press coverage; the primary pages were not read, so they stay as reported, not confirmed on 10/19/2026."
+          "detalhe": "The agent lives inside the browser: a browser built around it, like ChatGPT Atlas (OpenAI), or a feature of Chrome itself, like auto browse (Google). Both show up in press coverage; the primary pages were not read, so they stay as reported, not confirmed on 10/19/2026."
         },
         {
           "icone": "terminal",
@@ -76,7 +76,7 @@
           "sub": "primary source",
           "texto": [
             "A post from the maker, the documentation, or the official repository counts as fact. A press article or an aggregator counts as \"reported by.\"",
-            "Example: Anthropic's post from 11/24/2025 is a primary source; the Atlas launch date, here, came only from press coverage."
+            "Example: Anthropic's 11/24/2025 post is a primary source; OpenAI's post about Atlas (12/22/2025) only reached us here through press coverage."
           ]
         },
         {
@@ -84,7 +84,7 @@
           "sub": "date in the sentence",
           "texto": [
             "Write the date next to the status: \"beta on the Max plan on 11/24/2025,\" not \"it's in beta.\" In six months the sentence without a date becomes a lie.",
-            "A package version is status too: the kit pins <code>@playwright/mcp</code> 0.0.83 (09/28/2026) and <code>chrome-devtools-mcp</code> 1.10.1 (09/23/2026)."
+            "A package version is status too: the kit pins <code>@playwright/mcp</code> 0.0.83 and <code>chrome-devtools-mcp</code> 1.10.1, published on 09/28 and 09/23/2026 according to the npm registry."
           ]
         },
         {
@@ -122,7 +122,7 @@
         "abas": [
           {
             "rot": "Captured output (10/19/2026)",
-            "html": "<pre>node                   24.13.0\nplaywright             1.64.0 · Chromium 156.0.8078.4\n@playwright/mcp        0.0.83\nchrome-devtools-mcp    1.10.1\n@modelcontextprotocol/sdk 1.32.1 (cliente de ensaio, sem modelo)\nclaude (opcional)      2.1.303 (Claude Code)\ncodex (opcional)       codex-cli 0.163.0\nkit pronto: 4 de 4 peças obrigatórias\nsaída: 0</pre><p>Four required pieces: Node 20.19 or newer (chrome-devtools-mcp requires it), Playwright with its own Chromium, Playwright MCP, and Chrome DevTools MCP. Claude Code and Codex show up as optional: the whole course runs without them.</p>"
+            "html": "<pre>node                   24.13.0\nplaywright             1.64.0 · Chromium 156.0.8078.4\n@playwright/mcp        0.0.83\nchrome-devtools-mcp    1.10.1\n@modelcontextprotocol/sdk 1.32.1 (cliente de ensaio, sem modelo)\nclaude (opcional)      2.1.303 (Claude Code)\ncodex (opcional)       codex-cli 0.163.0\nkit pronto: 4 de 4 peças obrigatórias\nsaída: 0</pre><p>Four required pieces: Node 20.19+, 22.12+ or 23+ (chrome-devtools-mcp requires it), Playwright with its own Chromium, Playwright MCP, and Chrome DevTools MCP. Claude Code and Codex show up as optional: the whole course runs without them.</p>"
           },
           {
             "rot": "Installation (10/19/2026)",
@@ -134,7 +134,7 @@
     {
       "tipo": "pratica",
       "titulo": "Practice",
-      "sub": "The kit on your machine and your map.",
+      "sub": "The kit on your machine and your map. Each exercise has a \"done when\".",
       "exercicios": [
         {
           "id": "e1",

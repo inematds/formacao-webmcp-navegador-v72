@@ -13,7 +13,7 @@ let ok = 0;
 const linha = (rot, valor, obrigatorio = true) => { console.log(`${rot.padEnd(22)} ${valor}`); if (obrigatorio && !/^(falta|não)/.test(valor)) ok++; };
 
 const [maior, menor] = process.versions.node.split('.').map(Number);
-linha('node', (maior > 20 || (maior === 20 && menor >= 19)) ? process.versions.node : `falta: ${process.versions.node} (precisa 20.19 ou mais novo)`);
+linha('node', (maior >= 23 || (maior === 22 && menor >= 12) || (maior === 20 && menor >= 19)) ? process.versions.node : `falta: ${process.versions.node} (precisa 20.19+, 22.12+ ou 23+)`);
 const exe = chromium.executablePath();
 let chromiumVersao = 'falta: rode npx playwright install chromium';
 if (existsSync(exe)) {
